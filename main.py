@@ -1,3 +1,5 @@
 import cv2
-import ultralytics
+from ultralytics import YOLO
 import cvzone
+
+model = YOLO('yolov8n.yaml')
