@@ -1,7 +1,8 @@
-import cv2
+
 from ultralytics import YOLO
-import cvzone
+import os
 
-model = YOLO('yolov8n.pt')
-
-results = model.train(data='coco8.yaml', epochs=100, imgsz=640)
+if __name__ == "__main__":
+    model = YOLO("yolov8n-cls.pt")
+    model.info()
+    results = model.train(data="detect",epochs=100,imgsz=640)
