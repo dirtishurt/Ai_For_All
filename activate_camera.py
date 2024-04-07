@@ -1,3 +1,3 @@
 import camera
 
-camera.render('Working_Models/v/best.pt')
+camera.render('Working_Models/yolov8segment/best.pt')
