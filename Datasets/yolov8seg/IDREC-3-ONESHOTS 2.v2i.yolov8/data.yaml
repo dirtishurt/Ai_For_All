@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Joshua']
+
+roboflow:
+  workspace: idrec
+  project: idrec-3-oneshots-2
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/idrec/idrec-3-oneshots-2/dataset/2
