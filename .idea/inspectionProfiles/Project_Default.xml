@@ -3,8 +3,17 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <Languages>
-        <language minSize="47" name="Python" />
+        <language minSize="143" name="Python" />
       </Languages>
+    </inspection_tool>
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="$TORCH_USE_CUDA_DSA$">
+            <item index="0" class="java.lang.String" itemvalue="ultralytics" />
+          </list>
+        </value>
+      </option>
     </inspection_tool>
     <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
@@ -20,6 +29,7 @@
           <option value="N806" />
           <option value="N803" />
           <option value="N814" />
+          <option value="N813" />
         </list>
       </option>
     </inspection_tool>

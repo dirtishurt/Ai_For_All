@@ -1,5 +1,6 @@
 import os
 import random
+import time
 from datetime import date
 
 import yaml
@@ -7,6 +8,8 @@ import shutil
 
 
 def combineYaml(dataset1, dataset2=None, newDir='CombinedDatasets', name='data', overwrite=False, newNC=0, b=None):
+
+    newDir = os.path.abspath(newDir)
     if b is None:
         b = list()
     newDir2 = str(newDir) + "2"
@@ -15,8 +18,9 @@ def combineYaml(dataset1, dataset2=None, newDir='CombinedDatasets', name='data',
         data2_yaml = dataset2 + '/data.yaml'
 
         print(f'Combining {dataset1} and {dataset2} in directory {newDir} with name {name}.')
+    os.open(os.path.join(newDir, 'data.yaml'), os.O_CREAT)
+    new_yaml = open(os.path.join(newDir, 'data.yaml'), 'a')
 
-    new_yaml = open(os.path.join(newDir, 'data.yaml'), 'x')
 
     new_yaml.write('train: ./train/images\n')
     # new_yaml.write('train: \n')
@@ -30,7 +34,6 @@ def combineYaml(dataset1, dataset2=None, newDir='CombinedDatasets', name='data',
     # new_yaml.write(f'   - ./data/test/images\n')
     # new_yaml.write(f'   - ./data2/test/images\n')
     new_yaml.write('test: ./test/images \n')
-
     data1 = get_data(data1_yaml)
     if not overwrite:
         data2 = get_data(data2_yaml)
@@ -54,38 +57,37 @@ def combineYaml(dataset1, dataset2=None, newDir='CombinedDatasets', name='data',
         new_yaml.write('names: ' + str(x))
     new_yaml.close()
     print('Done.')
+    return newDir
 
 
 def combineFolders(dataset1, dataset2, newDir):
-    a = newDir
-    valid_dirs = checkFolders(dataset1, dataset2)
+    newDir = os.path.abspath(newDir)
+    valid_dirs = ['train', 'valid', 'test']
     print(f'Combining datasets, this may take a while.')
-    if valid_dirs.__contains__('valid'):
-        shutil.copytree(os.path.join(dataset1, 'valid'), os.path.join(newDir, 'valid'), dirs_exist_ok=True)
-        shutil.copytree(os.path.join(dataset2, 'valid'), os.path.join(newDir, 'valid'), dirs_exist_ok=True)
-    if valid_dirs.__contains__('test'):
-        shutil.copytree(os.path.join(dataset1, 'test'), os.path.join(newDir, 'test'), dirs_exist_ok=True)
-        shutil.copytree(os.path.join(dataset2, 'test'), os.path.join(newDir, 'test'), dirs_exist_ok=True)
-    if valid_dirs.__contains__('train'):
-        shutil.copytree(os.path.join(dataset1, 'train'), os.path.join(newDir, 'train'))
-        shutil.copytree(os.path.join(dataset2, 'train'), os.path.join(newDir, 'train'), dirs_exist_ok=True)
-
+    moveData(dataset1, newDir)
+    print(str(dataset1))
+    # What's funny is that the code WILL NOT WORK WITHOUT THIS?
+    # WHY, WHY Python? I know there is nothing wrong here with my code, I SPENT ALLL DAY, trying to find the issue with
+    # This code, there was none, there was an issue with moving too many files at once
+    time.sleep(.1)
+    moveData(dataset2, newDir)
+    print(str(dataset2))
     print(f'Done. Results saved at {newDir}')
+    return newDir
 
 
 def moveData(dataset, newDir):
     dataset = os.path.abspath(dataset)
-    valid_dirs = checkFolders(dataset, None)
+    valid_dirs = ['train', 'valid', 'test']
     if valid_dirs.__contains__('valid'):
-        shutil.copytree(os.path.join(dataset, 'valid'), os.path.join(newDir, 'valid'))
-
+        shutil.copytree(os.path.join(dataset, 'valid'), os.path.join(newDir, 'valid'), dirs_exist_ok=True)
+        time.sleep(.1)
     if valid_dirs.__contains__('test'):
-        shutil.copytree(os.path.join(dataset, 'test'), os.path.join(newDir, 'test'))
-
+        shutil.copytree(os.path.join(dataset, 'test'), os.path.join(newDir, 'test'), dirs_exist_ok=True)
+        time.sleep(.1)
     if valid_dirs.__contains__('train'):
-        shutil.copytree(os.path.join(dataset, 'train'), os.path.join(newDir, 'train'))
-    print(f'Done. Results saved at {newDir}')
-
+        shutil.copytree(os.path.join(dataset, 'train'), os.path.join(newDir, 'train'), dirs_exist_ok=True)
+        time.sleep(.1)
 
 
 
@@ -107,9 +109,9 @@ def checkFolders(d1, d2):
                 exist2.append(i)
             except FileNotFoundError:
                 pass
-
         return set(exist1) & set(exist2)
-    return exist1
+    else:
+        return exist1
 
 
 def get_data(dataset):
@@ -119,7 +121,6 @@ def get_data(dataset):
 
 
 def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
-
     for i in listdata:
         for fn in os.listdir(os.path.join(os.path.abspath(dataset), f'{i}/labels')):
             print(os.path.join(os.path.join(os.path.abspath(dataset), f'{i}/labels'), fn))
@@ -137,10 +138,13 @@ def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
                 with open(path, 'w') as filew:
                     filew.write(new_data)
                     filew.close()
+                file.close()
 
 # For future refrence, add a check to see if the combined datasets are being used for a pretrained model becaue the added
 # Dataset needs to be second.
 
 
-
 # fixLabels('Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', 10)
+#moveData('Datasets/yolov8seg/IDREC-3.v1i.yolov8', os.path.abspath('./CombinedDatasets'))
+#combineFolders('Datasets/yolov8seg/IDREC-3.v1i.yolov8',
+     #          'Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', os.path.abspath('./CombinedDatasets/1'))

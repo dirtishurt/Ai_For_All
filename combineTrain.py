@@ -1,9 +1,12 @@
 import datetime  # used for naming
 import random
 import shutil
+import time
+
+import numpy
 import torch
 from ultralytics import YOLO
-import os
+import os, sys, stat
 from combine_data import combineYaml, get_data, moveData, fixLabels, combineFolders
 from project_utils import flip
 
@@ -73,63 +76,95 @@ def nested_children(m: torch.nn.Module):
     return output
 
 
-def grabAFew(dataset, nc=1, listdata=['train', 'valid', 'test']):
-    files = []
+def grabAFew(dataset, nc=1):
+    dataset = os.path.abspath(dataset)
     null = []
-    for i in range(nc + 1):
-        files.append([])
-
-    for i in range(len(listdata) - 1):
-        for fn in os.listdir(os.path.join(os.path.abspath(dataset), f'{listdata[i]}/labels')):
-            # print(os.path.join(os.path.join(os.path.abspath(dataset), f'{i}/labels'), fn))
-            path = os.path.join(os.path.join(os.path.abspath(dataset), f'{listdata[i]}/labels'), fn)
-            with open(path, 'r') as file:
+    files = [[]] * nc
+    for x in ['train', 'valid', 'test']:
+        for a in os.listdir(os.path.join(os.path.join(dataset, x), 'labels')):
+            a = os.path.join(os.path.join(dataset, x), f'labels/{a}')
+            with open(os.path.abspath(a)) as file:
                 data = file.read()
-                count = 0
-                for x in data:
-                    if x != " ":
-                        count += 1
-                    else:
+                for i in data:
+                    count = 0
+                    if file.read() == " ":
                         break
-                try:
-                    files[int(data[0:count].strip()) - 1].append(listdata[i] + file.name)
-                except ValueError:
-                    # in the event of a null image we want to add it
-                    null.append(random.choice(listdata) + file.name)
-                except IndexError:
-                    print('Error')
-        newFiles = list()
-        for i in range(len(files) - 1):
-            for b in range(10):
-                try:
-                    newFiles.append(random.choice(files[i]))
-                except IndexError:
-                    print('error')
-        for i in range(len(null) - 1):
-            for b in range(3):
-                newFiles.append(random.choice(null))
-        return newFiles
+                    else:
+                        count += 1
+                classN = data[0:count]
+                if classN != "":
+                    files[int(classN) - 1].append(x + file.name)
+                else:
+                    null.append(x + file.name)
+                file.close()
+            time.sleep(0.0001)
+    for i in range(len(files)):
+        print(len(files[i]))
+    newFiles = []
+    for i in range(len(files)):
+        # print(i)
+        newT = numpy.char.find(files[i], 'train', 0, 5)
+        newTe = numpy.char.find(files[i], 'test', 0, 4)
+        newV = numpy.char.find(files[i], 'valid', 0, 5)
+        newTrain = []
+        newTest = []
+        newValid = []
+        print(newTe)
+        print(newV)
+        for x in range(len(newT)):
+            if newT[x] == 0:
+                newTrain.append(files[i][x])
+
+        for x in range(len(newTe)):
+            if newTe[x] == 0:
+                newTest.append(files[i][x])
+
+        for x in range(len(newV)):
+            if newV[x] == 0:
+                newValid.append(files[i][x])
+
+        for _ in range(10):
+            newFiles.append(random.choice(newTrain))
+        for _ in range(5):
+            newFiles.append(random.choice(newValid))
+        newFiles.append(random.choice(newTest))
+    return newFiles
+
+
+def checkString(string):
+    string = str(string[0:5])
+    print(string)
+    if string[0:5] == 'valid':
+        return 1
+    if string[0:4] == 'test':
+        return 2
+    if string[0:5] == 'train':
+        return 0
 
 
 def getCorresponding(list_of_files: list[str], newDir):
     # Needs to be used with a dataset
-    os.mkdir(newDir)
-    os.mkdir(os.path.join(newDir, 'train'))
-    os.mkdir(os.path.join(newDir, 'train/labels'))
-    os.mkdir(os.path.join(newDir, 'valid'))
-    os.mkdir(os.path.join(newDir, 'valid/labels'))
-    os.mkdir(os.path.join(newDir, 'test'))
-    os.mkdir(os.path.join(newDir, 'test/labels'))
-    os.mkdir(os.path.join(newDir, 'train/images'))
-    os.mkdir(os.path.join(newDir, 'valid/images'))
-    os.mkdir(os.path.join(newDir, 'test/images'))
+    if not os.path.exists(newDir):
+        os.mkdir(newDir)
+    if not os.path.exists(os.path.join(newDir, 'train')):
+        os.mkdir(os.path.join(newDir, 'train'))
+        os.mkdir(os.path.join(newDir, 'train/labels'))
+        os.mkdir(os.path.join(newDir, 'train/images'))
+    if not os.path.exists(os.path.join(newDir, 'valid')):
+        os.mkdir(os.path.join(newDir, 'valid'))
+        os.mkdir(os.path.join(newDir, 'valid/labels'))
+        os.mkdir(os.path.join(newDir, 'valid/images'))
+    if not os.path.exists(os.path.join(newDir, 'test')):
+        os.mkdir(os.path.join(newDir, 'test'))
+        os.mkdir(os.path.join(newDir, 'test/labels'))
+        os.mkdir(os.path.join(newDir, 'test/images'))
 
     # TODO make sure images are formatted to be jpgs
-    print(list_of_files)
     for i in list_of_files:
         if i.__contains__('trainC'):
             i = i[5:]
-            shutil.copy(i, os.path.join(newDir, 'train/labels'))
+            shutil.copy2(i, os.path.join(newDir, 'train/labels'), follow_symlinks=True)
+            time.sleep(.001)
             i = i[:len(i) - 2]
             z = ""
             for x in range((len(i) - 1), -1, -1):
@@ -143,11 +178,13 @@ def getCorresponding(list_of_files: list[str], newDir):
             prePath = os.path.split(prePath)[0]
             prePath = os.path.join(prePath, 'images')
             path = os.path.abspath(os.path.join(prePath, z))
-            shutil.copy(path, os.path.join(newDir, 'train/images'))
-
-        elif i.__contains__('testC'):
+            shutil.copy2(path, os.path.join(newDir, 'train/images'), follow_symlinks=True)
+            time.sleep(.001)
+    for i in list_of_files:
+        if i.__contains__('testC'):
             i = i[4:]
-            shutil.copy(i, os.path.join(newDir, 'test/labels'))
+
+            shutil.copy2(i, os.path.join(newDir, 'test/labels'), follow_symlinks=True)
             i = i[:len(i) - 2]
             z = ""
             for x in range((len(i) - 1), -1, -1):
@@ -161,10 +198,14 @@ def getCorresponding(list_of_files: list[str], newDir):
             prePath = os.path.split(prePath)[0]
             prePath = os.path.join(prePath, 'images')
             path = os.path.abspath(os.path.join(prePath, z))
-            shutil.copy(path, os.path.join(newDir, 'test/images'))
-        elif i.__contains__('validC'):
+            shutil.copy2(path, os.path.join(newDir, 'test/images'), follow_symlinks=True)
+            time.sleep(.001)
+    for i in list_of_files:
+        if i.__contains__('validC'):
+
             i = i[5:]
-            shutil.copy(i, os.path.join(newDir, 'valid/labels'))
+            shutil.copy(i, os.path.join(newDir, 'valid/labels'), follow_symlinks=True)
+
             i = i[:len(i) - 2]
             z = ""
             for x in range((len(i) - 1), -1, -1):
@@ -179,7 +220,8 @@ def getCorresponding(list_of_files: list[str], newDir):
             prePath = os.path.join(prePath, 'images')
 
             path = os.path.abspath(os.path.join(prePath, z))
-            shutil.copy(path, os.path.join(newDir, 'valid/images'))
+            shutil.copy2(path, os.path.join(newDir, 'valid/images'))
+            time.sleep(.001)
 
 
 def combineTrain(dataset, latestModel):
@@ -194,30 +236,48 @@ def makeSmallDataSet(d1, d2):
 
 
 # getCorresponding(grabAFew('./Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=10), './balls')
-def mainCombine(dataset1, dataset2):
+def mainCombine(dataset1, dataset2=None, nc=0):
     dataset1 = os.path.abspath(dataset1)
-    dataset2 = os.path.abspath(dataset2)
     a = get_data(dataset1 + '/data.yaml')
-    b = get_data(dataset2 + '/data.yaml')
-    newNc = a.get('nc') + b.get('nc')
+    if dataset2 is not None:
+        fixLabels(dataset2, nc=nc)
+        dataset2 = os.path.abspath(dataset2)
+        b = get_data(dataset2 + '/data.yaml')
+        newNc = a.get('nc') + b.get('nc')
+
     new = ""
     for _ in range(10):
         new += str((random.randint(0, 10) % 10))
 
     new += str(datetime.date.today())
 
-    fD = os.path.abspath('./CombinedDatasets')
-    complete = os.path.join(fD, new)
-    os.mkdir(complete)
-    combineYaml(dataset1, dataset2, complete, new)
-    combineFolders(dataset1, dataset2, complete)
-    l1 = grabAFew(complete, newNc - 1)
-    os.chdir('/Test')
-    getCorresponding(l1, 'nest')
+    fD = os.path.abspath('./Cool')
+    complete = fD
+    if not os.path.exists(complete):
+        os.mkdir(complete)
+    os.mkdir(os.path.join(complete, new))
+    path = os.path.join(complete, new)
+    if dataset2 is not None:
+        combineYaml(dataset1, dataset2, path, new)
+    else:
+        shutil.copy(os.path.join(dataset1, 'data.yaml'), path)
+    if dataset2 is None:
+        getCorresponding(grabAFew(dataset1, nc), path)
+    else:
+        getCorresponding(grabAFew(dataset1, nc), path)
+        getCorresponding(grabAFew(dataset2, nc), path)
 
 
-def combineBothDatasets(d1, d2):
-    combineYaml(d1, d2)
+def combineBothDatasets(d1, d2, newDir):
+    combineYaml(d1, d2, newDir)
+    combineFolders(d1, d2, newDir)
+    return newDir
 
 
-getCorresponding(grabAFew(dataset='Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=9), 'balls')
+# Function not works properly
+# combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', './S')
+
+
+# mainCombine('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8',nc=11)
+
+print(grabAFew('./S', 11))

@@ -18,6 +18,7 @@ def render(dataset):
 
             an_frame = results[0].plot()
 
-            cv2.imshow('Test', an_frame)
-            cv2.waitKey(1)
+            return an_frame
+
+
 
