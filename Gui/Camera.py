@@ -1,29 +1,42 @@
+import os
+
 import cv2
 from PySide6.QtWidgets import  QWidget, QLabel, QApplication
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap
+from ultralytics import YOLO
+
 pyqtSignal = Signal
 pyqtSlot = Slot
 class Thread(QThread):
+
+
     changePixmap = pyqtSignal(QImage)
     def run(self):
+        self.dataset = os.path.abspath(input('Enter Path'))
         self.isRunning=True
+        model = YOLO(os.path.abspath(self.dataset))
         cap = cv2.VideoCapture(0)
         while self.isRunning:
             ret, frame = cap.read()
             if ret:
-                # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                rgbImage = cv2.cvtColor(self.render(model, frame), cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
+                cv2.waitKey(1)
 
     def stop(self):
         self.isRunning=False
         self.quit()
         self.terminate()
+
+    def render(self, model, frame):
+        results = model.predict(frame, conf=.56, verbose=True)
+        an_frame = results[0].plot()
+        return an_frame
 
 class Camera(QWidget):
     def __init__(self, a):
