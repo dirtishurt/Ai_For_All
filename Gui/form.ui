@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>910</width>
+    <width>1439</width>
     <height>724</height>
    </rect>
   </property>
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>781</width>
-      <height>642</height>
+      <width>1002</width>
+      <height>1002</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -28,8 +28,14 @@
       <widget class="Camera" name="widget" native="true">
        <property name="minimumSize">
         <size>
-         <width>640</width>
-         <height>640</height>
+         <width>1000</width>
+         <height>1000</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1000</width>
+         <height>1000</height>
         </size>
        </property>
       </widget>
@@ -57,7 +63,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>910</width>
+     <width>1439</width>
      <height>33</height>
     </rect>
    </property>

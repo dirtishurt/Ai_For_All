@@ -25,18 +25,19 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(910, 724)
+        MainWindow.resize(1439, 724)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget = QWidget(self.centralwidget)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 781, 642))
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 1002, 1002))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.widget = Camera(self.verticalLayoutWidget)
         self.widget.setObjectName(u"widget")
-        self.widget.setMinimumSize(QSize(640, 640))
+        self.widget.setMinimumSize(QSize(1000, 1000))
+        self.widget.setMaximumSize(QSize(1000, 1000))
 
         self.verticalLayout.addWidget(self.widget)
 
@@ -49,7 +50,7 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget.raise_()
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 910, 33))
+        self.menubar.setGeometry(QRect(0, 0, 1439, 33))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

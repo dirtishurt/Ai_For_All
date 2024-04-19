@@ -44,8 +44,8 @@ class Camera(QWidget):
         self.title = 'PySide Video'
         self.left = 0
         self.top = 0
-        self.fwidth = 640
-        self.fheight = 640
+        self.fwidth = 1000
+        self.fheight = 1000
         self.initUI(a)
     @pyqtSlot(QImage)
     def setImage(self, image):
@@ -58,8 +58,7 @@ class Camera(QWidget):
 
         # create a label
         self.label = QLabel(a)
-        self.label.resize(200, 200)
-        self.label.move(200,200)
+        self.label.resize(640, 640)
         self.th = Thread(self)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
