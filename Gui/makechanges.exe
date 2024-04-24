@@ -1,1 +1,2 @@
+cd ./Id_Recognition/Gui
 pyside6-uic Gui/form.ui -o Gui/ui_form.py

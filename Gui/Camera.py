@@ -4,6 +4,7 @@ import cv2
 from PySide6.QtWidgets import  QWidget, QLabel, QApplication
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap
+import torch
 from ultralytics import YOLO
 
 pyqtSignal = Signal
@@ -13,7 +14,12 @@ class Thread(QThread):
 
     changePixmap = pyqtSignal(QImage)
     def run(self):
-        self.dataset = os.path.abspath(input('Enter Path'))
+        exists = False
+        if not torch.cuda.is_available():
+            print("No CUDA capable GPU available, performance may be poor.")
+        while not exists:
+            self.dataset = os.path.abspath(input('Enter Path').strip())
+            exists = os.path.exists(self.dataset)
         self.isRunning=True
         model = YOLO(os.path.abspath(self.dataset))
         cap = cv2.VideoCapture(0)
