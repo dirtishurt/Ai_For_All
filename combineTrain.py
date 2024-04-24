@@ -85,7 +85,7 @@ def grabAFew(dataset, nc=1):
             a = os.path.join(os.path.join(dataset, x), f'labels/{a}')
             with open(os.path.abspath(a)) as file:
                 data = file.read()
-                for i in data:
+                for _ in data:
                     count = 0
                     if file.read() == " ":
                         break
@@ -109,8 +109,7 @@ def grabAFew(dataset, nc=1):
         newTrain = []
         newTest = []
         newValid = []
-        print(newTe)
-        print(newV)
+        print(f'Grabbing images and labels for class {i}')
         for x in range(len(newT)):
             if newT[x] == 0:
                 newTrain.append(files[i][x])
@@ -123,11 +122,28 @@ def grabAFew(dataset, nc=1):
             if newV[x] == 0:
                 newValid.append(files[i][x])
 
-        for _ in range(10):
-            newFiles.append(random.choice(newTrain))
-        for _ in range(5):
-            newFiles.append(random.choice(newValid))
-        newFiles.append(random.choice(newTest))
+        for _ in range(20):
+            a = random.choice(newTrain)
+            newFiles.append(a)
+            newTrain.remove(a)
+            if len(newTrain) < 1:
+                print(f'Ran out of training images at {_} for class {i}')
+                break
+        for _ in range(7):
+            a = random.choice(newValid)
+            newFiles.append(a)
+            newValid.remove(a)
+            if len(newValid) < 1:
+                print(f'Ran out of validation images at {_} for class {i}')
+                break
+        for _ in range(3):
+            a = random.choice(newTest)
+            newFiles.append(a)
+            newTest.remove(a)
+            if len(newTest) < 1:
+                print(f'Ran out of test images at {_} for class {i}')
+                break
+
     return newFiles
 
 
@@ -236,14 +252,13 @@ def makeSmallDataSet(d1, d2):
 
 
 # getCorresponding(grabAFew('./Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=10), './balls')
-def mainCombine(dataset1, dataset2=None, nc=0):
+def mainCombine(dataset1, dataset2=None):
     dataset1 = os.path.abspath(dataset1)
     a = get_data(dataset1 + '/data.yaml')
     if dataset2 is not None:
-        fixLabels(dataset2, nc=nc)
+        fixLabels(dataset2, nc=int(a.get('nc')))
         dataset2 = os.path.abspath(dataset2)
         b = get_data(dataset2 + '/data.yaml')
-        newNc = a.get('nc') + b.get('nc')
 
     new = ""
     for _ in range(10):
@@ -262,22 +277,24 @@ def mainCombine(dataset1, dataset2=None, nc=0):
     else:
         shutil.copy(os.path.join(dataset1, 'data.yaml'), path)
     if dataset2 is None:
-        getCorresponding(grabAFew(dataset1, nc), path)
+        getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
     else:
-        getCorresponding(grabAFew(dataset1, nc), path)
-        getCorresponding(grabAFew(dataset2, nc), path)
+        getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
+        getCorresponding(grabAFew(dataset2, int(b.get('nc'))), path)
 
 
 def combineBothDatasets(d1, d2, newDir):
+    if not os.path.exists(os.path.abspath(newDir)):
+        os.mkdir(newDir)
     combineYaml(d1, d2, newDir)
     combineFolders(d1, d2, newDir)
     return newDir
 
 
-# Function not works properly
-# combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', './S')
+# Function work?
+#combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', './S')
 
 
-# mainCombine('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8',nc=11)
+mainCombine('S')
 
-print(grabAFew('./S', 11))
+#print(grabAFew('./S', 11))

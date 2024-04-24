@@ -144,7 +144,7 @@ def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
 # Dataset needs to be second.
 
 
-# fixLabels('Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', 10)
+#fixLabels('Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', 10)
 #moveData('Datasets/yolov8seg/IDREC-3.v1i.yolov8', os.path.abspath('./CombinedDatasets'))
 #combineFolders('Datasets/yolov8seg/IDREC-3.v1i.yolov8',
      #          'Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', os.path.abspath('./CombinedDatasets/1'))

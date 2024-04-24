@@ -6,6 +6,8 @@ capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 capture.open(0)
 
 
+# TODO Archive this file
+
 def render(dataset):
     model = YOLO(os.path.abspath(dataset))
 
@@ -19,6 +21,3 @@ def render(dataset):
             an_frame = results[0].plot()
 
             return an_frame
-
-
-

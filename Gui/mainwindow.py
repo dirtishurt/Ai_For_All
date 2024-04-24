@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
-
+from os import system
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 # Important:
@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
+
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    system('py update_gui.py')
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
