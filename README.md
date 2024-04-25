@@ -1,7 +1,3 @@
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted
-iwr -useb community.chocolatey.org/install.ps1 | iex
-choco install mingw
-
 **Requires Python 3.11 or Earlier**
 ------------
 If you are training a dataset, and you need a gpu first install Conda.
