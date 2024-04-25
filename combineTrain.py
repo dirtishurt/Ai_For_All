@@ -6,74 +6,14 @@ import time
 import numpy
 import torch
 from ultralytics import YOLO
-import os, sys, stat
+import os
 from combine_data import combineYaml, get_data, moveData, fixLabels, combineFolders
 from project_utils import flip
 
 
-def addData(model1, data2):
-    model = YOLO(os.path.abspath(model1))
-    model.train(data=os.path.abspath(data2), epochs=50, freeze=22)
 
 
-def compare_dicts(state_dict1, state_dict2):
-    # Compare the keys
-    keys1 = set(state_dict1.keys())
-    keys2 = set(state_dict2.keys())
 
-    if keys1 != keys2:
-        print("Models have different parameter names.")
-        return False
-
-    # Compare the values (weights)
-    for key in keys1:
-        if not torch.equal(state_dict1[key], state_dict2[key]):
-            print(f"Weights for parameter '{key}' are different.")
-            if "bn" in key and "22" not in key:
-                state_dict1[key] = state_dict2[key]
-
-
-def newModel():
-    model = YOLO('yolov8n-seg.pt')
-    model.load(os.path.abspath('./Working_Models/yolov8segment/best.pt'))
-    model.train(data=os.path.abspath('./CombinedDatasets/66860504442024-04-14/66860504442024-04-14.yaml'), device=0,
-                epochs=120)
-
-
-def createTrainingSet(trainedModel, newDataSet):
-    names = YOLO(trainedModel).names
-    data1_yaml = newDataSet + '/data.yaml'
-    data1 = get_data(data1_yaml)
-
-    nc = len(names) + data1.get('nc')
-    x = list()
-
-    for i in names:
-        x.append(names.__getitem__(i))
-    fixLabels(newDataSet, nc - 1)
-    b = ""
-    for i in range(5):
-        b += str(random.randint(0, 10) % 10)
-    newDir = f'CombinedDatasets/{datetime.date.today()} {b}'
-    os.mkdir(newDir)
-    combineYaml(newDataSet, None, os.path.abspath(newDir), 'data', True, nc, x)
-    moveData(newDataSet, os.path.join(os.path.abspath(newDir), 'data'))
-
-
-def nested_children(m: torch.nn.Module):
-    children = dict(m.named_children())
-    output = {}
-    if children == {}:
-        # if module has no children; m is last child! :O
-        return m
-    else:
-        # look for children from children... to the last child!
-        for name, child in children.items():
-            try:
-                output[name] = nested_children(child)
-            except TypeError:
-                output[name] = nested_children(child)
-    return output
 
 
 def grabAFew(dataset, nc=1):
@@ -240,6 +180,7 @@ def getCorresponding(list_of_files: list[str], newDir):
             time.sleep(.001)
 
 
+#TODO Implement this in the gui, add model selection
 def combineTrain(dataset, latestModel):
     model = YOLO('yolov8n-seg.pt').load(latestModel)
     dataset = os.path.abspath(dataset)
@@ -252,6 +193,8 @@ def makeSmallDataSet(d1, d2):
 
 
 # getCorresponding(grabAFew('./Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=10), './balls')
+
+#TODO Implement this in the gui
 def mainCombine(dataset1, dataset2=None):
     dataset1 = os.path.abspath(dataset1)
     a = get_data(dataset1 + '/data.yaml')
@@ -265,7 +208,7 @@ def mainCombine(dataset1, dataset2=None):
         new += str((random.randint(0, 10) % 10))
 
     new += str(datetime.date.today())
-
+    #TODO Change this to have input
     fD = os.path.abspath('./Cool')
     complete = fD
     if not os.path.exists(complete):
@@ -282,7 +225,7 @@ def mainCombine(dataset1, dataset2=None):
         getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
         getCorresponding(grabAFew(dataset2, int(b.get('nc'))), path)
 
-
+#TODO Implement this in the gui
 def combineBothDatasets(d1, d2, newDir):
     if not os.path.exists(os.path.abspath(newDir)):
         os.mkdir(newDir)
@@ -292,9 +235,9 @@ def combineBothDatasets(d1, d2, newDir):
 
 
 # Function work?
+
 #combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', './S')
 
-
-mainCombine('S')
+#mainCombine('S')
 
 #print(grabAFew('./S', 11))

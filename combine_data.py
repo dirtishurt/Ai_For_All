@@ -119,7 +119,7 @@ def get_data(dataset):
         data = yaml.full_load(f)
     return data
 
-
+#TODO Change this to be dynamic with combining datasets that have many classes
 def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
     for i in listdata:
         for fn in os.listdir(os.path.join(os.path.abspath(dataset), f'{i}/labels')):

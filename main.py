@@ -12,7 +12,7 @@ torch.compile()
 # --fixed
 
 # tr = input('Train Model Y/n')
-
+#TODO Delete this mess
 
 if __name__ == '__main__':
     # combineTrian.addData('./Working_Models/yolov8segment/best.pt',

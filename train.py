@@ -5,7 +5,7 @@ from ultralytics import YOLO
 import os
 
 
-
+#TODO Implement this in the gui
 def runTrain(yaml_location):
     if torch.cuda.is_available():
         model = YOLO('yolov8n-seg.pt')
