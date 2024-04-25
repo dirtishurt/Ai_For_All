@@ -30,7 +30,7 @@ class Thread(QThread):
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                p = convertToQtFormat.scaled(460, 390, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
                 cv2.waitKey(1)
 
@@ -40,7 +40,7 @@ class Thread(QThread):
         self.terminate()
 
     def render(self, model, frame):
-        results = model.predict(frame, conf=.56, verbose=True)
+        results = model.predict(frame, conf=.56, verbose=False)
         an_frame = results[0].plot()
         return an_frame
 
@@ -48,10 +48,10 @@ class Camera(QWidget):
     def __init__(self, a):
         super().__init__()
         self.title = 'PySide Video'
-        self.left = 0
-        self.top = 0
-        self.fwidth = 1000
-        self.fheight = 1000
+        self.left = 20
+        self.top = 20
+        self.fwidth = 460
+        self.fheight = 390
         self.initUI(a)
     @pyqtSlot(QImage)
     def setImage(self, image):
@@ -60,11 +60,12 @@ class Camera(QWidget):
 
     def initUI(self, a):
         self.setGeometry(self.left, self.top, self.fwidth, self.fheight)
-        self.resize(600, 600)
+        self.resize(self.fwidth, self.fheight)
 
         # create a label
         self.label = QLabel(a)
-        self.label.resize(640, 640)
+        self.label.resize(self.fwidth, self.fheight)
+        self.label.move(self.left, self.top)
         self.th = Thread(self)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
