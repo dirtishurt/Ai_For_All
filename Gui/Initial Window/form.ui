@@ -107,10 +107,10 @@
    <widget class="QPushButton" name="run_button">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>510</x>
       <y>430</y>
-      <width>111</width>
-      <height>51</height>
+      <width>81</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="palette">
@@ -208,6 +208,43 @@
       <height>61</height>
      </rect>
     </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Accent">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>70</red>
+          <green>180</green>
+          <blue>127</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Accent">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>70</red>
+          <green>180</green>
+          <blue>127</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Accent">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>70</red>
+          <green>180</green>
+          <blue>127</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
     <property name="font">
      <font>
       <family>Segoe UI Semibold</family>
@@ -264,6 +301,101 @@
       <width>461</width>
       <height>391</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="end_button">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>430</y>
+      <width>85</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>49</red>
+          <green>49</green>
+          <blue>49</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="ButtonText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>70</red>
+          <green>180</green>
+          <blue>127</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>49</red>
+          <green>49</green>
+          <blue>49</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="ButtonText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>70</red>
+          <green>180</green>
+          <blue>127</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>49</red>
+          <green>49</green>
+          <blue>49</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Semibold</family>
+      <pointsize>18</pointsize>
+      <bold>true</bold>
+      <underline>false</underline>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="text">
+     <string>End</string>
     </property>
    </widget>
   </widget>
@@ -448,6 +580,62 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>detected_output</tabstop>
+  <tabstop>confidence_slider</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>run_button</tabstop>
+  <tabstop>end_button</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>confidence_slider</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>447</x>
+     <y>498</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>477</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>run_button</sender>
+   <signal>clicked()</signal>
+   <receiver>camer_output</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>543</x>
+     <y>470</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>378</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>end_button</sender>
+   <signal>clicked()</signal>
+   <receiver>camer_output</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>649</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

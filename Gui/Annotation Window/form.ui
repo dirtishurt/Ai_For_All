@@ -3,7 +3,7 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::WindowModality::ApplicationModal</enum>
   </property>
   <property name="enabled">
    <bool>true</bool>
@@ -12,8 +12,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>938</width>
-    <height>549</height>
+    <width>976</width>
+    <height>591</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,19 +41,19 @@
    <string notr="true"/>
   </property>
   <property name="layoutDirection">
-   <enum>Qt::LeftToRight</enum>
+   <enum>Qt::LayoutDirection::LeftToRight</enum>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
   <property name="toolButtonStyle">
-   <enum>Qt::ToolButtonFollowStyle</enum>
+   <enum>Qt::ToolButtonStyle::ToolButtonFollowStyle</enum>
   </property>
   <property name="documentMode">
    <bool>false</bool>
   </property>
   <property name="tabShape">
-   <enum>QTabWidget::Rounded</enum>
+   <enum>QTabWidget::TabShape::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -130,7 +130,7 @@
      <bool>true</bool>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::StrongFocus</enum>
+     <enum>Qt::FocusPolicy::StrongFocus</enum>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
@@ -170,7 +170,7 @@
      <bool>true</bool>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
+     <enum>QFrame::Shadow::Sunken</enum>
     </property>
     <property name="tabKeyNavigation">
      <bool>true</bool>
@@ -179,7 +179,7 @@
      <bool>true</bool>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::MultiSelection</enum>
+     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
     </property>
    </widget>
    <zorder>listWidget</zorder>
@@ -401,10 +401,10 @@
     <bool>true</bool>
    </property>
    <property name="focusPolicy">
-    <enum>Qt::StrongFocus</enum>
+    <enum>Qt::FocusPolicy::StrongFocus</enum>
    </property>
    <property name="contextMenuPolicy">
-    <enum>Qt::ActionsContextMenu</enum>
+    <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
    </property>
    <property name="windowTitle">
     <string notr="true">toolBar</string>
@@ -416,13 +416,13 @@
     <string notr="true"/>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
    </property>
    <property name="movable">
     <bool>false</bool>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonIconOnly</enum>
+    <enum>Qt::ToolButtonStyle::ToolButtonIconOnly</enum>
    </property>
    <property name="floatable">
     <bool>true</bool>
@@ -443,8 +443,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>938</width>
-     <height>21</height>
+     <width>976</width>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuReturn">
@@ -491,10 +491,10 @@
     <string>Ctrl+B</string>
    </property>
    <property name="shortcutContext">
-    <enum>Qt::WidgetWithChildrenShortcut</enum>
+    <enum>Qt::ShortcutContext::WidgetWithChildrenShortcut</enum>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
   <action name="actionPolygonTool">
@@ -521,7 +521,7 @@
     <string>Ctrl+P</string>
    </property>
    <property name="shortcutContext">
-    <enum>Qt::ApplicationShortcut</enum>
+    <enum>Qt::ShortcutContext::ApplicationShortcut</enum>
    </property>
    <property name="autoRepeat">
     <bool>true</bool>
@@ -530,7 +530,7 @@
     <bool>true</bool>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
   <action name="actiondelete">
@@ -551,7 +551,7 @@
     <string>Ctrl+Alt+Shift+D</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
   <action name="actionget_files">
@@ -559,7 +559,7 @@
     <string>get files</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::ApplicationSpecificRole</enum>
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
  </widget>
