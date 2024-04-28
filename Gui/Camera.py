@@ -1,7 +1,7 @@
 import os
 
 import cv2
-from PySide6.QtWidgets import  QWidget, QLabel, QApplication
+from PySide6.QtWidgets import  QWidget, QLabel, QApplication, QVBoxLayout
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap
 import torch
@@ -46,12 +46,11 @@ class Thread(QThread):
 
 class Camera(QWidget):
     def __init__(self, a):
-        super().__init__()
-        self.title = 'PySide Video'
-        self.left = 20
-        self.top = 20
-        self.fwidth = 460
-        self.fheight = 390
+        super().__init__(a)
+        self.label = QLabel(a)
+        self.th = None
+        self.title = 'Camera'
+        self.layout = QVBoxLayout()
         self.initUI(a)
     @pyqtSlot(QImage)
     def setImage(self, image):
@@ -59,14 +58,8 @@ class Camera(QWidget):
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def initUI(self, a):
-        self.setGeometry(self.left, self.top, self.fwidth, self.fheight)
-        self.resize(self.fwidth, self.fheight)
-
-        # create a label
-        self.label = QLabel(a)
-        self.label.resize(self.fwidth, self.fheight)
-        self.label.move(self.left, self.top)
         self.th = Thread(self)
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
-
