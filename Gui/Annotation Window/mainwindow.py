@@ -5,7 +5,7 @@ import time
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog
 import PySide6.QtCore
-from PySide6.QtGui import QStandardItemModel, QStandardItem
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction
 from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         self.toolbar = self.ui.toolBar
         self.runner = None
         self.imgsAdd = self.ui.menuOpen_Images
+        self.active = None
 
     @Slot(bool)
     def getFiles(self):
@@ -36,46 +37,50 @@ class MainWindow(QMainWindow):
         self.runner = Runnable(self.toolbar.actions())
         pool.start(self.runner)
 
-
-class Tools:
-    def __init__(self, tool_type):
-        self.tool = tool_type
-
-    def setTool(self):
-        if self.tool == 'Poly':
-            return 0
-        if self.tool == 'Box':
-            return 1
-        if self.tool == 'Trash':
-            return 2
-        else:
-            return -1
+    @Slot(QAction)
+    def getActive(self, i):
+        if i.isChecked():
+            print(i.text())
+            if self.active != i:
+                if self.active is not None:
+                    self.active.toggle()
+                self.active = i
+                if self.active.text() == 'delete':
+                    self.active.toggle()
+                    self.active = None
 
 
-class Runnable(QRunnable):
+
+class Runnable(QRunnable, QObject):
+    getWidgets = Signal(QAction)
+
     def __init__(self, n):
-        super().__init__()
+        QObject.__init__(self)
+        QRunnable.__init__(self)
         self.n = n
         self.running = True
-    getFiles = Signal(bool)
-    def run(self):
 
+    def run(self):
         while self.running:
             for i in self.n:
                 if i.text() != '':
-                    # print(i.isChecked())
-                    
-                    time.sleep(.5)
+                    self.getWidgets.emit(i)
+                    time.sleep(.05)
 
     def stop(self):
         self.running = False
 
 
 if __name__ == "__main__":
+
     app = QApplication(sys.argv)
     widget = MainWindow()
+
     widget.show()
     widget.getactions()
+    # ALL Signals below this comment
+
+    widget.runner.getWidgets.connect(widget.getActive)
     if app.exit():
         widget.runner.stop()
     sys.exit(app.exec())

@@ -22,12 +22,11 @@ class Annotator(QWidget):
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
-        self.layout.addWidget(self.label)
-        self.setLayout(self.layout)
-
 
     def initUI(self, a):
         self.th = Thread(self)
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
 
@@ -38,7 +37,7 @@ class Thread(QThread):
     def run(self):
         self.isRunning = True
         while self.isRunning:
-            p = QImage('1595270639570.jpg').scaled(640, 500, Qt.KeepAspectRatioByExpanding)
+            p = QImage('1595270639570.jpg').scaled(640, 640, Qt.KeepAspectRatioByExpanding)
 
             self.changePixmap.emit(p)
 
@@ -46,7 +45,4 @@ class Thread(QThread):
         self.isRunning = False
         self.quit()
         self.terminate()
-
-    def initUI(self):
-        pass
 
