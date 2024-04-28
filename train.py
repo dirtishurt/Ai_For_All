@@ -4,20 +4,27 @@ import torch
 from ultralytics import YOLO
 import os
 
+torch.compile()
 
-#TODO Implement this in the gui
-def runTrain(yaml_location):
-    if torch.cuda.is_available():
-        model = YOLO('yolov8n-seg.pt')
-        results = model.train(data=os.path.abspath(yaml_location),
-                              device=0, patience=10, cls=2, epochs=100, pretrained='Working_Models/yolov8segment/best.pt')
-    else:
-        results = ("Failed to train, either run with CPU or check to see if you are using CONDA3.10 with PyTorch "
-                   "installed")
+torch.cuda.init()
+
+
+# TODO Implement this in the gui and fix the labels being broken
+def runTrain(yaml_location, epochs=100, patience=20, devices=None, pretrained=False,
+             modelLocation='Working_Models/base-ultralytics/yolov8n-seg.pt'):
+    """
+    epochs adjusts length of training, patience adjusts the time it waits for improvement,
+    do not add devices unless a cuda compatible gpu is detected
+
+
+    """
+    modelLocation = os.path.abspath(modelLocation)
+    model = YOLO(modelLocation)
+    results = model.train(data=os.path.abspath(yaml_location),
+                          device=devices,
+                          patience=patience, epochs=epochs, pretrained=pretrained)
 
     return results
 
 
 
-if __name__ == '__main__':
-    runTrain('S/data.yaml')

@@ -119,13 +119,12 @@ def get_data(dataset):
         data = yaml.full_load(f)
     return data
 
-#TODO Change this to be dynamic with combining datasets that have many classes
-def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
+def fixLabels(dataset, first_nc=1, listdata=('train', 'valid', 'test')):
     for i in listdata:
         for fn in os.listdir(os.path.join(os.path.abspath(dataset), f'{i}/labels')):
-            print(os.path.join(os.path.join(os.path.abspath(dataset), f'{i}/labels'), fn))
             path = os.path.join(os.path.join(os.path.abspath(dataset), f'{i}/labels'), fn)
             with open(path, 'r') as file:
+                new_data = None
                 data = file.read()
                 count = 0
                 for x in data:
@@ -133,18 +132,25 @@ def fixLabels(dataset, nc=1, listdata=('train', 'valid', 'test')):
                         count += 1
                     else:
                         break
-                new_data = str(nc) + data[count:]
+                if count != 0:
+                    old_cls = data[:count]
+                    if int(old_cls) < int(first_nc):
+                        new_data = str(int(old_cls)+first_nc) + data[count:]
+                    else:
+                        print('Class Value Already Satisfied, skipping this file...')
+
                 file.close()
-                with open(path, 'w') as filew:
-                    filew.write(new_data)
-                    filew.close()
+                if new_data is not None:
+                    with open(path, 'w') as filew:
+                        filew.write(new_data)
+                        filew.close()
                 file.close()
 
 # For future refrence, add a check to see if the combined datasets are being used for a pretrained model becaue the added
 # Dataset needs to be second.
 
 
-#fixLabels('Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', 10)
+#fixLabels('Datasets/yolov8seg/godhelpmeendmysuffering2.v1i.yolov8', 1)
 #moveData('Datasets/yolov8seg/IDREC-3.v1i.yolov8', os.path.abspath('./CombinedDatasets'))
 #combineFolders('Datasets/yolov8seg/IDREC-3.v1i.yolov8',
      #          'Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', os.path.abspath('./CombinedDatasets/1'))

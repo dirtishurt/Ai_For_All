@@ -19,7 +19,7 @@ from project_utils import flip
 def grabAFew(dataset, nc=1):
     dataset = os.path.abspath(dataset)
     null = []
-    files = [[]] * nc
+    files = [[]] * (nc)
     for x in ['train', 'valid', 'test']:
         for a in os.listdir(os.path.join(os.path.join(dataset, x), 'labels')):
             a = os.path.join(os.path.join(dataset, x), f'labels/{a}')
@@ -33,7 +33,10 @@ def grabAFew(dataset, nc=1):
                         count += 1
                 classN = data[0:count]
                 if classN != "":
-                    files[int(classN) - 1].append(x + file.name)
+
+                    print(len(files))
+                    print(int(classN)-1)
+                    files[int(classN)-1].append(x + file.name)
                 else:
                     null.append(x + file.name)
                 file.close()
@@ -115,7 +118,7 @@ def getCorresponding(list_of_files: list[str], newDir):
         os.mkdir(os.path.join(newDir, 'test/labels'))
         os.mkdir(os.path.join(newDir, 'test/images'))
 
-    # TODO make sure images are formatted to be jpgs
+    # TODO make sure images are formatted to be jpgs -- Maybe not idk
     for i in list_of_files:
         if i.__contains__('trainC'):
             i = i[5:]
@@ -180,13 +183,6 @@ def getCorresponding(list_of_files: list[str], newDir):
             time.sleep(.001)
 
 
-#TODO Implement this in the gui, add model selection
-def combineTrain(dataset, latestModel):
-    model = YOLO('yolov8n-seg.pt').load(latestModel)
-    dataset = os.path.abspath(dataset)
-    model.train(data=(dataset + '/data.yaml'), epochs=30, cls=.7, warmup_epochs=0)
-
-
 def makeSmallDataSet(d1, d2):
     nc = get_data(d1 + '/data.yaml').get('nc') + get_data(d2 + '/data.yaml').get('nc')
     combineYaml(d1, d2, newNC=nc)
@@ -195,11 +191,12 @@ def makeSmallDataSet(d1, d2):
 # getCorresponding(grabAFew('./Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=10), './balls')
 
 #TODO Implement this in the gui
-def mainCombine(dataset1, dataset2=None):
+def mainCombine(dataset1, dataset2=None, path=os.path.abspath('./CombinedDatasets')):
     dataset1 = os.path.abspath(dataset1)
+    path = os.path.abspath(path)
     a = get_data(dataset1 + '/data.yaml')
     if dataset2 is not None:
-        fixLabels(dataset2, nc=int(a.get('nc')))
+        fixLabels(dataset2, first_nc=int(a.get('nc')))
         dataset2 = os.path.abspath(dataset2)
         b = get_data(dataset2 + '/data.yaml')
 
@@ -208,8 +205,7 @@ def mainCombine(dataset1, dataset2=None):
         new += str((random.randint(0, 10) % 10))
 
     new += str(datetime.date.today())
-    #TODO Change this to have input
-    fD = os.path.abspath('./Cool')
+    fD = os.path.abspath(path)
     complete = fD
     if not os.path.exists(complete):
         os.mkdir(complete)
@@ -222,6 +218,7 @@ def mainCombine(dataset1, dataset2=None):
     if dataset2 is None:
         getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
     else:
+
         getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
         getCorresponding(grabAFew(dataset2, int(b.get('nc'))), path)
 
@@ -230,14 +227,18 @@ def combineBothDatasets(d1, d2, newDir):
     if not os.path.exists(os.path.abspath(newDir)):
         os.mkdir(newDir)
     combineYaml(d1, d2, newDir)
+    data= get_data(os.path.join(d2, 'data.yaml'))
+    fixLabels(d2, first_nc=int(data.get('nc')))
     combineFolders(d1, d2, newDir)
     return newDir
 
 
 # Function work?
 
-#combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8', './S')
+#combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8',
+  #                  './CombinedDatasets')
+mainCombine('Datasets/yolov8seg/IDREC-3.v1i.yolov8',
+            'Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8')
 
-#mainCombine('S')
 
 #print(grabAFew('./S', 11))
