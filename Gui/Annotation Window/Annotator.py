@@ -2,7 +2,8 @@ import os
 import cv2
 from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout
 from PySide6.QtCore import QThread, Qt, Signal, Slot
-from PySide6.QtGui import QImage, QPixmap, QColor
+from PySide6.QtGui import QImage, QPixmap, QColor, QPainter
+
 
 pyqtSignal = Signal
 pyqtSlot = Slot
@@ -16,33 +17,27 @@ class Annotator(QWidget):
         self.title = 'Annotator'
         self.layout = QVBoxLayout()
         self.initUI(a)
+        self.activeClass = None
+        self.image = None
+        self.lastImage = self.image
 
 
 
-    @pyqtSlot(QImage)
+
+
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
 
+
     def initUI(self, a):
-        self.th = Thread(self)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
-        self.th.changePixmap.connect(self.setImage)
-        self.th.start()
+
+    def changeImage(self):
+        if self.image != self.lastImage:
+            p = QImage(self.image).scaled(640, 640)
+            self.setImage(p)
+            self.lastImage = self.image
 
 
-class Thread(QThread):
-    changePixmap = pyqtSignal(QImage)
-
-    def run(self):
-        self.isRunning = True
-        while self.isRunning:
-            p = QImage('1595270639570.jpg').scaled(640, 640, Qt.KeepAspectRatioByExpanding)
-
-            self.changePixmap.emit(p)
-
-    def stop(self):
-        self.isRunning = False
-        self.quit()
-        self.terminate()
 
