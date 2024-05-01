@@ -22,6 +22,7 @@ class Files(QListWidget):
         self.filenames = ''
         self.setSortingEnabled(True)
         self.setSpacing(1)
+        self.ref = None
 
         self.initUI()
 
@@ -37,8 +38,12 @@ class Files(QListWidget):
             self.addItem(newitem)
 
     def see_clicked(self):
-        for index in self.selectedIndexes():
-            print(index)
+        if self.ref is not None:
+            for index in self.items(self.ref):
+                print(self.ref)
+
+    def next(self):
+        self.see_clicked()
 
 class FileItem(QListWidgetItem):
 

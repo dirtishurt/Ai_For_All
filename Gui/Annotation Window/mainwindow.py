@@ -34,11 +34,9 @@ class MainWindow(QMainWindow):
         self.files = self.ui.Files
         self.annotator = self.ui.Annotator
         self.draw = self.ui.Draw
-
-    @Slot(bool)
-    def getFiles(self):
-        if self.imgsAdd.actionAt(QWidgetAction.triggered):
-            self.imgsAdd.emit(str(QFileDialog.getExistingDirectory(self, 'Select Directory')))
+        self.ui.Next.clicked.connect(self.next)
+        self.ui.Prev.clicked.connect(self.prev)
+        self.ui.New_Ann.clicked.connect(self.new_ann)
 
     def keyPressEvent(self, event):
         self.last_key = event.key()
@@ -65,25 +63,49 @@ class MainWindow(QMainWindow):
     def getActive(self, i):
         if i.isChecked():
             if self.active != i:
+                self.lastActive = self.active
                 if self.active is not None:
                     self.active.toggle()
                 self.active = i
             if self.active.text() == 'delete':
                 self.active.toggle()
                 self.draw.clearCanvas()
+                if self.lastActive is not None:
+                    self.active = self.lastActive
+                    self.active.toggle()
+
             if self.active.text() == 'Undo':
                 self.active.toggle()
                 self.draw.undo()
+                if self.lastActive is not None:
+                    self.active = self.lastActive
+                    self.active.toggle()
+
+    @Slot()
+    def prev(self):
+        print('p')
+    @Slot()
+    def next(self):
+        self.files.next()
+    @Slot()
+    def new_ann(self):
+        self.draw.finish()
 
     @Slot()
     def loop(self):
         self.send_line_output()
         if self.files.currentItem() is not None:
+            self.files.ref = self.files.currentItem().name
+            print(self.files.ref)
             self.annotator.image = self.files.currentItem().name
             self.annotator.changeImage()
             if self.classes.currentItem() is not None:
                 self.annotator.activeClass = self.classes.currentItem().name
+                self.draw.activeClass = self.classes.currentItem().name
             self.files.currentItem().setSelected(False)
+
+
+
 
 
 class Runnable(QRunnable, QObject):
@@ -100,7 +122,7 @@ class Runnable(QRunnable, QObject):
             for i in self.n:
                 if i.text() != '':
                     self.getWidgets.emit(i)
-                    time.sleep(.05)
+                    time.sleep(.01)
 
     def stop(self):
         self.running = False

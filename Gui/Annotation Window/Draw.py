@@ -16,12 +16,14 @@ class Draw(QWidget):
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
         self.title = 'Annotator'
+        self.activeClass = None
 
         self.layout = QVBoxLayout()
         self.initUI()
         self.click = 0
         self.cords = []
         self.pair = []
+        self.finished_annots = []
 
     def mousePressEvent(self, e):
 
@@ -48,6 +50,7 @@ class Draw(QWidget):
         self.label.clear()
         self.cords = []
         self.pair = []
+        self.finished_annots = []
         self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
@@ -55,9 +58,18 @@ class Draw(QWidget):
     def undo(self):
         if self.cords:
             self.cords.pop()
+            if len(self.cords) == 1:
+                self.cords.pop()
             self.label.clear()
             self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
             self.canvas.fill(QColor(255, 255, 255, 0))
             self.label.setPixmap(self.canvas)
             self.updateCanvas()
+
+    def finish(self):
+        if self.activeClass and self.cords:
+            self.finished_annots.append((self.activeClass, self.cords, self.cords[0]))
+            self.cords = []
+            self.pair = []
+            print(self.finished_annots)
 

@@ -232,9 +232,9 @@
     <property name="geometry">
      <rect>
       <x>640</x>
-      <y>319</y>
+      <y>349</y>
       <width>256</width>
-      <height>321</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -278,9 +278,9 @@
     <property name="geometry">
      <rect>
       <x>640</x>
-      <y>0</y>
-      <width>256</width>
-      <height>281</height>
+      <y>30</y>
+      <width>260</width>
+      <height>251</height>
      </rect>
     </property>
    </widget>
@@ -328,7 +328,7 @@
      <rect>
       <x>640</x>
       <y>280</y>
-      <width>161</width>
+      <width>261</width>
       <height>41</height>
      </rect>
     </property>
@@ -448,6 +448,85 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="Next">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>310</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Next</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Prev">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>310</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Previous</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="New_Ann">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>-10</y>
+      <width>261</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>62</red>
+          <green>180</green>
+          <blue>137</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>62</red>
+          <green>180</green>
+          <blue>137</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>62</red>
+          <green>180</green>
+          <blue>137</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="text">
+     <string>New Annotation</string>
+    </property>
+   </widget>
+   <zorder>New_Ann</zorder>
+   <zorder>Prev</zorder>
+   <zorder>Next</zorder>
    <zorder>Files</zorder>
    <zorder>Annotator</zorder>
    <zorder>Classes</zorder>
@@ -870,7 +949,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="enabled">
     <bool>true</bool>
