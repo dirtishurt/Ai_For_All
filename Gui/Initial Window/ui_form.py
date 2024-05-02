@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QLineEdit, QMainWindow, QMenu,
     QStatusBar, QTextBrowser, QWidget)
 
 from Camera import Camera
+from Github import Github
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -73,6 +74,8 @@ class Ui_MainWindow(object):
         self.actionLoad.setObjectName(u"actionLoad")
         self.actionAdd_2 = QAction(MainWindow)
         self.actionAdd_2.setObjectName(u"actionAdd_2")
+        self.actionHello = QAction(MainWindow)
+        self.actionHello.setObjectName(u"actionHello")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
@@ -138,10 +141,10 @@ class Ui_MainWindow(object):
         self.detected_output = QTextBrowser(self.centralwidget)
         self.detected_output.setObjectName(u"detected_output")
         self.detected_output.setGeometry(QRect(510, 20, 171, 391))
-        self.lineEdit = QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(410, 450, 81, 21))
-        self.lineEdit.setClearButtonEnabled(False)
+        self.confidence_percent = QLineEdit(self.centralwidget)
+        self.confidence_percent.setObjectName(u"confidence_percent")
+        self.confidence_percent.setGeometry(QRect(410, 450, 81, 21))
+        self.confidence_percent.setClearButtonEnabled(False)
         self.camer_output = Camera(self.centralwidget)
         self.camer_output.setObjectName(u"camer_output")
         self.camer_output.setGeometry(QRect(20, 20, 461, 391))
@@ -178,7 +181,7 @@ class Ui_MainWindow(object):
         self.menuAdd_To_Models.setObjectName(u"menuAdd_To_Models")
         self.menuModels = QMenu(self.menubar)
         self.menuModels.setObjectName(u"menuModels")
-        self.menuGithub = QMenu(self.menubar)
+        self.menuGithub = Github(self.menubar)
         self.menuGithub.setObjectName(u"menuGithub")
         self.menuSave = QMenu(self.menubar)
         self.menuSave.setObjectName(u"menuSave")
@@ -187,8 +190,8 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
         QWidget.setTabOrder(self.detected_output, self.confidence_slider)
-        QWidget.setTabOrder(self.confidence_slider, self.lineEdit)
-        QWidget.setTabOrder(self.lineEdit, self.run_button)
+        QWidget.setTabOrder(self.confidence_slider, self.confidence_percent)
+        QWidget.setTabOrder(self.confidence_percent, self.run_button)
         QWidget.setTabOrder(self.run_button, self.end_button)
 
         self.menubar.addAction(self.menuwhere_is_the_box.menuAction())
@@ -208,7 +211,7 @@ class Ui_MainWindow(object):
         self.menuAdd_To_Models.addAction(self.actionAdd_2)
 
         self.retranslateUi(MainWindow)
-        self.lineEdit.textEdited.connect(self.confidence_slider.update)
+        self.confidence_percent.textEdited.connect(self.confidence_slider.update)
         self.run_button.clicked.connect(self.camer_output.update)
         self.end_button.clicked.connect(self.camer_output.close)
 
@@ -236,8 +239,9 @@ class Ui_MainWindow(object):
         self.actionSelect.setText(QCoreApplication.translate("MainWindow", u"Select", None))
         self.actionLoad.setText(QCoreApplication.translate("MainWindow", u"Load", None))
         self.actionAdd_2.setText(QCoreApplication.translate("MainWindow", u"Add", None))
+        self.actionHello.setText(QCoreApplication.translate("MainWindow", u"Hello", None))
         self.run_button.setText(QCoreApplication.translate("MainWindow", u"Run", None))
-        self.lineEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"percent", None))
+        self.confidence_percent.setPlaceholderText(QCoreApplication.translate("MainWindow", u"percent", None))
         self.end_button.setText(QCoreApplication.translate("MainWindow", u"End", None))
         self.menuwhere_is_the_box.setTitle(QCoreApplication.translate("MainWindow", u"Tools", None))
         self.menuCreate_New.setTitle(QCoreApplication.translate("MainWindow", u"Create_New", None))

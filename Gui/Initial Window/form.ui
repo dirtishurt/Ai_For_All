@@ -277,7 +277,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="confidence_percent">
     <property name="geometry">
      <rect>
       <x>410</x>
@@ -459,7 +459,7 @@
      <string>Models</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuGithub">
+   <widget class="Github" name="menuGithub">
     <property name="title">
      <string>Github</string>
     </property>
@@ -571,6 +571,11 @@
     <string>Add</string>
    </property>
   </action>
+  <action name="actionHello">
+   <property name="text">
+    <string>Hello</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -579,18 +584,23 @@
    <header>Camera.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>Github</class>
+   <extends>QMenu</extends>
+   <header>Github.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>detected_output</tabstop>
   <tabstop>confidence_slider</tabstop>
-  <tabstop>lineEdit</tabstop>
+  <tabstop>confidence_percent</tabstop>
   <tabstop>run_button</tabstop>
   <tabstop>end_button</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>lineEdit</sender>
+   <sender>confidence_percent</sender>
    <signal>textEdited(QString)</signal>
    <receiver>confidence_slider</receiver>
    <slot>update()</slot>

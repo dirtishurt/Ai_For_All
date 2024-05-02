@@ -26,7 +26,7 @@ class Receiver(QMainWindow):
 
 
 class Sender(QRunnable, QObject):
-    # Again bool should be whatever you want yourfunction to be
+    # Again bool should be whatever you want your function to be
     sendThing = Signal(bool)
 
     def __init__(self, loop):
@@ -48,6 +48,7 @@ class Sender(QRunnable, QObject):
 
     def stop(self):
         self.running = False
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
