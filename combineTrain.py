@@ -11,11 +11,6 @@ from combine_data import combineYaml, get_data, moveData, fixLabels, combineFold
 from project_utils import flip
 
 
-
-
-
-
-
 def grabAFew(dataset, nc=1):
     dataset = os.path.abspath(dataset)
     null = []
@@ -35,8 +30,8 @@ def grabAFew(dataset, nc=1):
                 if classN != "":
 
                     print(len(files))
-                    print(int(classN)-1)
-                    files[int(classN)-1].append(x + file.name)
+                    print(int(classN) - 1)
+                    files[int(classN) - 1].append(x + file.name)
                 else:
                     null.append(x + file.name)
                 file.close()
@@ -190,7 +185,7 @@ def makeSmallDataSet(d1, d2):
 
 # getCorresponding(grabAFew('./Datasets/yolov8seg/IDREC-3.v1i.yolov8', nc=10), './balls')
 
-#TODO Implement this in the gui
+# TODO Implement this in the gui
 def mainCombine(dataset1, dataset2=None, path=os.path.abspath('./CombinedDatasets')):
     dataset1 = os.path.abspath(dataset1)
     path = os.path.abspath(path)
@@ -222,12 +217,13 @@ def mainCombine(dataset1, dataset2=None, path=os.path.abspath('./CombinedDataset
         getCorresponding(grabAFew(dataset1, int(a.get('nc'))), path)
         getCorresponding(grabAFew(dataset2, int(b.get('nc'))), path)
 
-#TODO Implement this in the gui
+
+# TODO Implement this in the gui
 def combineBothDatasets(d1, d2, newDir):
     if not os.path.exists(os.path.abspath(newDir)):
         os.mkdir(newDir)
     combineYaml(d1, d2, newDir)
-    data= get_data(os.path.join(d2, 'data.yaml'))
+    data = get_data(os.path.join(d2, 'data.yaml'))
     fixLabels(d2, first_nc=int(data.get('nc')))
     combineFolders(d1, d2, newDir)
     return newDir
@@ -235,10 +231,9 @@ def combineBothDatasets(d1, d2, newDir):
 
 # Function work?
 
-#combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8',
-  #                  './CombinedDatasets')
+# combineBothDatasets('Datasets/yolov8seg/IDREC-3.v1i.yolov8','Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8',
+#                  './CombinedDatasets')
 mainCombine('Datasets/yolov8seg/IDREC-3.v1i.yolov8',
             'Datasets/yolov8seg/IDREC-3-ONESHOTS 2.v2i.yolov8')
 
-
-#print(grabAFew('./S', 11))
+# print(grabAFew('./S', 11))

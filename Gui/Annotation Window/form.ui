@@ -283,6 +283,15 @@
       <height>251</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="toolTipDuration">
+     <number>-1</number>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::EditTrigger::DoubleClicked|QAbstractItemView::EditTrigger::EditKeyPressed|QAbstractItemView::EditTrigger::SelectedClicked</set>
+    </property>
    </widget>
    <widget class="Line" name="line">
     <property name="geometry">
@@ -457,6 +466,9 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string/>
+    </property>
     <property name="text">
      <string>Next</string>
     </property>
@@ -469,6 +481,9 @@
       <width>131</width>
       <height>51</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string/>
     </property>
     <property name="text">
      <string>Previous</string>
@@ -519,6 +534,12 @@
        </colorrole>
       </disabled>
      </palette>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="toolTipDuration">
+     <number>1000</number>
     </property>
     <property name="text">
      <string>New Annotation</string>
@@ -899,20 +920,38 @@
     <property name="title">
      <string>Return</string>
     </property>
+    <addaction name="actionSave_and_Return"/>
    </widget>
    <widget class="QMenu" name="menuSave">
     <property name="title">
      <string>Save</string>
     </property>
+    <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuOpen_Images">
     <property name="title">
      <string>Open Images</string>
     </property>
+    <addaction name="actionSelect_Directory"/>
+    <addaction name="actionAdd_Directory"/>
+   </widget>
+   <widget class="QMenu" name="menuSet_Project_Directory">
+    <property name="title">
+     <string>Set Project Directory</string>
+    </property>
+    <addaction name="actionSelect_Folder"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionProject_Directory"/>
    </widget>
    <addaction name="menuReturn"/>
    <addaction name="menuSave"/>
    <addaction name="menuOpen_Images"/>
+   <addaction name="menuSet_Project_Directory"/>
+   <addaction name="menuView"/>
   </widget>
   <action name="actionBox">
    <property name="checkable">
@@ -1017,6 +1056,41 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="actionSelect_Directory">
+   <property name="text">
+    <string>Select Folder</string>
+   </property>
+  </action>
+  <action name="actionAdd_Directory">
+   <property name="text">
+    <string>Add Folder</string>
+   </property>
+  </action>
+  <action name="actionAdd_Files">
+   <property name="text">
+    <string>Add Files</string>
+   </property>
+  </action>
+  <action name="actionSelect_Folder">
+   <property name="text">
+    <string>Select Folder</string>
+   </property>
+  </action>
+  <action name="actionProject_Directory">
+   <property name="text">
+    <string>Project Directory</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_and_Return">
+   <property name="text">
+    <string>Save and Return</string>
    </property>
   </action>
  </widget>

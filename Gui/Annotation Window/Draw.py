@@ -50,7 +50,30 @@ class Draw(QWidget):
         self.label.clear()
         self.cords = []
         self.pair = []
+        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas.fill(QColor(255, 255, 255, 0))
+        self.label.setPixmap(self.canvas)
+
+    def deleteAllAnnotations(self):
+        self.label.clear()
+        self.cords = []
         self.finished_annots = []
+        self.pair = []
+        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas.fill(QColor(255, 255, 255, 0))
+        self.label.setPixmap(self.canvas)
+
+    def clearLastAnnotation(self):
+        self.finished_annots.pop()
+        self.pair = []
+        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas.fill(QColor(255, 255, 255, 0))
+        self.label.setPixmap(self.canvas)
+
+    def partialClear(self):
+        self.label.clear()
+        self.cords = []
+        self.pair = []
         self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
@@ -66,10 +89,22 @@ class Draw(QWidget):
             self.label.setPixmap(self.canvas)
             self.updateCanvas()
 
-    def finish(self):
-        if self.activeClass and self.cords:
-            self.finished_annots.append((self.activeClass, self.cords, self.cords[0]))
+    def new_ann(self):
+        if self.cords:
+            lst_str = f'{self.activeClass} '
+            for i in self.cords:
+                lst_str += f'{(i.x() / 640)} '
+                lst_str += f'{(i.y() / 640)} '
+            self.finished_annots.append(lst_str)
             self.cords = []
-            self.pair = []
+
+    def finish(self):
+        if self.cords:
+            lst_str = f'{self.activeClass} '
+            for i in self.cords:
+                lst_str += f'{(i.x() / 640)} '
+                lst_str += f'{(i.y() / 640)} '
+            self.finished_annots.append(lst_str)
             print(self.finished_annots)
+            return self.finished_annots
 

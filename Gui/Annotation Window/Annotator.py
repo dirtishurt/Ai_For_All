@@ -34,10 +34,10 @@ class Annotator(QWidget):
         self.setLayout(self.layout)
 
     def changeImage(self):
-        if self.image != self.lastImage:
-            p = QImage(self.image).scaled(640, 640)
+        if self.image.name != self.lastImage:
+            p = QImage(self.image.name).scaled(640, 640)
             self.setImage(p)
-            self.lastImage = self.image
+            self.lastImage = self.image.name
 
 
 

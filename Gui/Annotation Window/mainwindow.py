@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import os
+import shutil
 import sys
 import time
 
@@ -19,6 +20,9 @@ class MainWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.dialog = QFileDialog()
+        self.workingDirectory = None
+        self.dialog.setFileMode(QFileDialog.FileMode.Directory)
         self.last_key = None
         self.file_path = None
         self.ui = Ui_MainWindow()
@@ -37,9 +41,38 @@ class MainWindow(QMainWindow):
         self.ui.Next.clicked.connect(self.next)
         self.ui.Prev.clicked.connect(self.prev)
         self.ui.New_Ann.clicked.connect(self.new_ann)
+        self.ui.menuOpen_Images.actions()[0].triggered.connect(self.fileSelectorDialog1)
+        self.ui.menuOpen_Images.actions()[1].triggered.connect(self.fileSelectorDialog2)
+        self.ui.menuSet_Project_Directory.actions()[0].triggered.connect(self.setWorkingDirectory)
+        self.ui.menuView.actions()[0].triggered.connect(self.viewWorkingDirectory)
+        self.ui.menuSave.actions()[0].triggered.connect(self.SaveAll)
+
+    @Slot()
+    def setWorkingDirectory(self):
+        if self.dialog.exec():
+            self.workingDirectory = self.dialog.selectedFiles()
+        print(self.workingDirectory)
+
+    @Slot()
+    def SaveAll(self):
+        pass
+
+    @Slot()
+    def viewWorkingDirectory(self):
+        os.system(f'start {os.path.realpath(self.workingDirectory[0])}')
 
     def keyPressEvent(self, event):
         self.last_key = event.key()
+
+    @Slot()
+    def fileSelectorDialog1(self):
+        print(self.ui.menuOpen_Images.actions())
+        self.files.getFiles(1)
+
+    @Slot()
+    def fileSelectorDialog2(self):
+        print(self.ui.menuOpen_Images.actions())
+        self.files.getFiles(2)
 
     def send_line_output(self):
         if self.lineedit.editingFinished:
@@ -83,29 +116,52 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def prev(self):
-        print('p')
+        self.files.prev()
+
     @Slot()
     def next(self):
         self.files.next()
+        a = self.draw.finish()
+        print(a)
+        if self.draw.activeClass is not None:
+            filename = self.annotator.image.base[:len(self.annotator.image.base)-4] + '.txt'
+            imgdir = self.annotator.image.name[:len(self.annotator.image.name)-len(self.annotator.image.base)]
+            print(imgdir)
+            print(filename)
+            print(self.workingDirectory[0])
+            if self.workingDirectory is not None:
+                lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
+                cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
+                if os.path.exists(os.path.join(lbl_dir, filename)):
+                    with open(os.path.join(lbl_dir, filename), 'a') as fn:
+                        for _ in a:
+                            fn.write(_)
+                            fn.write('\n')
+                        fn.close()
+                else:
+                    if os.path.exists(lbl_dir):
+                        with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                            for _ in a:
+                                fn.write(_)
+                                fn.write('\n')
+                            fn.close()
+                    else:
+                        os.mkdir(lbl_dir)
+                        with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                            for _ in a:
+                                fn.write(_)
+                                fn.write('\n')
+                            fn.close()
+                if os.path.exists(cp_img_dir):
+                    shutil.copy((imgdir+self.annotator.image.base), cp_img_dir)
+                else:
+                    os.mkdir(cp_img_dir)
+                    shutil.copy((imgdir+self.annotator.image.base), cp_img_dir)
+        self.draw.partialClear()
+
     @Slot()
     def new_ann(self):
-        self.draw.finish()
-
-    @Slot()
-    def loop(self):
-        self.send_line_output()
-        if self.files.currentItem() is not None:
-            self.files.ref = self.files.currentItem().name
-            print(self.files.ref)
-            self.annotator.image = self.files.currentItem().name
-            self.annotator.changeImage()
-            if self.classes.currentItem() is not None:
-                self.annotator.activeClass = self.classes.currentItem().name
-                self.draw.activeClass = self.classes.currentItem().name
-            self.files.currentItem().setSelected(False)
-
-
-
+        self.draw.new_ann()
 
 
 class Runnable(QRunnable, QObject):
@@ -141,11 +197,16 @@ class OtherLoop(QRunnable, QObject):
         while self.running:
             self.n.send_line_output()
             if self.n.files.currentItem() is not None:
-                self.n.annotator.image = self.n.files.currentItem().name
+                self.n.files.ref = self.n.files.currentItem()
+                self.n.annotator.image = self.n.files.currentItem()
                 self.n.annotator.changeImage()
-                if self.n.classes.currentItem() is not None:
-                    self.n.annotator.activeClass = self.n.classes.currentItem().name
                 self.n.files.currentItem().setSelected(False)
+            if self.n.classes.currentItem() is not None:
+                self.n.annotator.activeClass = self.n.classes.currentItem().name
+                self.n.draw.activeClass = self.n.classes.indexFromItem(self.n.classes.currentItem()).row()
+            elif self.n.classes.currentItem() is None:
+                self.n.annotator.activeClass = None
+                self.n.draw.activeClass = None
             time.sleep(.1)
 
 
@@ -159,7 +220,6 @@ if __name__ == "__main__":
     # ALL Signals below this comment
 
     widget.runner.getWidgets.connect(widget.getActive)
-    widget.runner2.loop.connect(widget.loop)
     if app.exit():
         widget.runner.stop()
     sys.exit(app.exec())
