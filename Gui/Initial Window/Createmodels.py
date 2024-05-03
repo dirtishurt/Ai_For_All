@@ -3,7 +3,7 @@ from PySide6.QtCore import Signal, Slot, QRunnable, QObject, Qt, QThreadPool, QU
 from PySide6.QtGui import QAction, Qt
 
 
-class Github(QMenu):
+class CreateModels(QMenu):
     def __init__(self, window):
         super().__init__(window)
         self.key = None

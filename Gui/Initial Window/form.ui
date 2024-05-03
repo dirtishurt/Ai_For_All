@@ -422,13 +422,6 @@
      <property name="title">
       <string>Create_New</string>
      </property>
-     <widget class="QMenu" name="menuFrom_Folder">
-      <property name="title">
-       <string>From_Folder</string>
-      </property>
-      <addaction name="actionSelect"/>
-     </widget>
-     <addaction name="menuFrom_Folder"/>
     </widget>
     <addaction name="actionChange_Camera"/>
     <addaction name="menuCreate_New"/>
@@ -454,9 +447,9 @@
     <addaction name="actionRemove_2"/>
     <addaction name="actionOpen_2"/>
    </widget>
-   <widget class="QMenu" name="menuModels">
+   <widget class="CreateModels" name="menuCreateModels">
     <property name="title">
-     <string>Models</string>
+     <string>Create Model</string>
     </property>
    </widget>
    <widget class="Github" name="menuGithub">
@@ -464,16 +457,16 @@
      <string>Github</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuSave">
+   <widget class="QMenu" name="menuLoad_Model">
     <property name="title">
-     <string>Save</string>
+     <string>Load Model</string>
     </property>
    </widget>
    <addaction name="menuwhere_is_the_box"/>
    <addaction name="menuDatasets"/>
-   <addaction name="menuModels"/>
+   <addaction name="menuCreateModels"/>
+   <addaction name="menuLoad_Model"/>
    <addaction name="menuGithub"/>
-   <addaction name="menuSave"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -588,6 +581,11 @@
    <class>Github</class>
    <extends>QMenu</extends>
    <header>Github.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CreateModels</class>
+   <extends>QMenu</extends>
+   <header>Createmodels.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

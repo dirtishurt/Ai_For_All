@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QLineEdit, QMainWindow, QMenu,
     QStatusBar, QTextBrowser, QWidget)
 
 from Camera import Camera
+from Createmodels import CreateModels
 from Github import Github
 
 class Ui_MainWindow(object):
@@ -171,20 +172,18 @@ class Ui_MainWindow(object):
         self.menuwhere_is_the_box.setObjectName(u"menuwhere_is_the_box")
         self.menuCreate_New = QMenu(self.menuwhere_is_the_box)
         self.menuCreate_New.setObjectName(u"menuCreate_New")
-        self.menuFrom_Folder = QMenu(self.menuCreate_New)
-        self.menuFrom_Folder.setObjectName(u"menuFrom_Folder")
         self.menuDatasets = QMenu(self.menubar)
         self.menuDatasets.setObjectName(u"menuDatasets")
         self.menuAdd = QMenu(self.menuDatasets)
         self.menuAdd.setObjectName(u"menuAdd")
         self.menuAdd_To_Models = QMenu(self.menuAdd)
         self.menuAdd_To_Models.setObjectName(u"menuAdd_To_Models")
-        self.menuModels = QMenu(self.menubar)
-        self.menuModels.setObjectName(u"menuModels")
+        self.menuCreateModels = CreateModels(self.menubar)
+        self.menuCreateModels.setObjectName(u"menuCreateModels")
         self.menuGithub = Github(self.menubar)
         self.menuGithub.setObjectName(u"menuGithub")
-        self.menuSave = QMenu(self.menubar)
-        self.menuSave.setObjectName(u"menuSave")
+        self.menuLoad_Model = QMenu(self.menubar)
+        self.menuLoad_Model.setObjectName(u"menuLoad_Model")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -196,13 +195,11 @@ class Ui_MainWindow(object):
 
         self.menubar.addAction(self.menuwhere_is_the_box.menuAction())
         self.menubar.addAction(self.menuDatasets.menuAction())
-        self.menubar.addAction(self.menuModels.menuAction())
+        self.menubar.addAction(self.menuCreateModels.menuAction())
+        self.menubar.addAction(self.menuLoad_Model.menuAction())
         self.menubar.addAction(self.menuGithub.menuAction())
-        self.menubar.addAction(self.menuSave.menuAction())
         self.menuwhere_is_the_box.addAction(self.actionChange_Camera)
         self.menuwhere_is_the_box.addAction(self.menuCreate_New.menuAction())
-        self.menuCreate_New.addAction(self.menuFrom_Folder.menuAction())
-        self.menuFrom_Folder.addAction(self.actionSelect)
         self.menuDatasets.addAction(self.menuAdd.menuAction())
         self.menuDatasets.addAction(self.actionRemove_2)
         self.menuDatasets.addAction(self.actionOpen_2)
@@ -245,12 +242,11 @@ class Ui_MainWindow(object):
         self.end_button.setText(QCoreApplication.translate("MainWindow", u"End", None))
         self.menuwhere_is_the_box.setTitle(QCoreApplication.translate("MainWindow", u"Tools", None))
         self.menuCreate_New.setTitle(QCoreApplication.translate("MainWindow", u"Create_New", None))
-        self.menuFrom_Folder.setTitle(QCoreApplication.translate("MainWindow", u"From_Folder", None))
         self.menuDatasets.setTitle(QCoreApplication.translate("MainWindow", u"Datasets", None))
         self.menuAdd.setTitle(QCoreApplication.translate("MainWindow", u"Add", None))
         self.menuAdd_To_Models.setTitle(QCoreApplication.translate("MainWindow", u"Add_To_Models", None))
-        self.menuModels.setTitle(QCoreApplication.translate("MainWindow", u"Models", None))
+        self.menuCreateModels.setTitle(QCoreApplication.translate("MainWindow", u"Create Model", None))
         self.menuGithub.setTitle(QCoreApplication.translate("MainWindow", u"Github", None))
-        self.menuSave.setTitle(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.menuLoad_Model.setTitle(QCoreApplication.translate("MainWindow", u"Load Model", None))
     # retranslateUi
 

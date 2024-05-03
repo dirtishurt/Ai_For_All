@@ -44,6 +44,10 @@ class MainWindow(QMainWindow):
         if self.ui.menuGithub.get_mouse_event():
             webbrowser.open("https://github.com/dirtishurt/Ai_For_All")
 
+    def create_models(self):
+        if self.ui.menuCreateModels.get_mouse_event():
+            print("maybe")
+
     def getactions(self):
         # threadCount = QThreadPool.globalInstance().maxThreadCount()
         pool = QThreadPool.globalInstance()
@@ -86,6 +90,7 @@ class OtherLoop(QRunnable, QObject):
         while self.running:
             self.n.send_line_output()
             self.n.github()
+            self.n.create_models()
             time.sleep(.1)
 
 
