@@ -27,4 +27,4 @@ def runTrain(yaml_location, epochs=100, patience=20, devices=None, pretrained=Fa
     return results
 
 if __name__ == '__main__':
-    runTrain('An_Prj1/dataset_2013264305634/data.yaml')
+    runTrain('An_Prj1/dataset_9920259392621/data.yaml')
