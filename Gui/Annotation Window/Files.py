@@ -20,7 +20,7 @@ class Files(QListWidget):
 
         self.dialog.setViewMode(QFileDialog.ViewMode.Detail)
         self.filenames = ''
-        self.setSortingEnabled(True)
+        self.setSortingEnabled(False)
         self.setSpacing(1)
         self.ref = None
 

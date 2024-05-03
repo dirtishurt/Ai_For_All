@@ -1,18 +1,24 @@
 # This Python file uses the following encoding: utf-8
+import math
 import os
+import random
 import shutil
 import sys
 import time
 
+import cv2
 from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog
 import PySide6.QtCore
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction, QKeyEvent, QColor, QPixmap
-from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize
+from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize, QPoint
+
+import project_utils
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
+from project_utils import resize_img, partition_pct
 
 
 class MainWindow(QMainWindow):
@@ -46,12 +52,15 @@ class MainWindow(QMainWindow):
         self.ui.menuSet_Project_Directory.actions()[0].triggered.connect(self.setWorkingDirectory)
         self.ui.menuView.actions()[0].triggered.connect(self.viewWorkingDirectory)
         self.ui.menuSave.actions()[0].triggered.connect(self.SaveAll)
+        self.ui.menuCreate_Training_Set.actions()[0].triggered.connect(self.create_set)
 
     @Slot()
     def setWorkingDirectory(self):
         if self.dialog.exec():
             self.workingDirectory = self.dialog.selectedFiles()
         print(self.workingDirectory)
+        self.classes.load_classes(self.workingDirectory[0])
+        print(len(self.classes.classes))
 
     @Slot()
     def SaveAll(self):
@@ -59,7 +68,8 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def viewWorkingDirectory(self):
-        os.system(f'start {os.path.realpath(self.workingDirectory[0])}')
+        if self.workingDirectory is not None:
+            os.system(f'start {os.path.realpath(self.workingDirectory[0])}')
 
     def keyPressEvent(self, event):
         self.last_key = event.key()
@@ -78,8 +88,12 @@ class MainWindow(QMainWindow):
         if self.lineedit.editingFinished:
             if self.last_key == Qt.Key.Key_Return:
                 if self.lineedit.text() not in self.classes.classes:
-                    self.classes.classes.append(self.lineedit.text())
-                    self.classes.add_classes()
+                    if self.lineedit.text() is not None:
+                        self.classes.classes.append(self.lineedit.text())
+                        self.classes.add_classes()
+                        self.classes.setCurrentItem(self.classes.item(len(self.classes.classes) - 1))
+                        self.classes.currentItem().setSelected(True)
+                        print(self.classes.currentItem().isSelected())
                 self.lineedit.clear()
                 self.last_key = None
 
@@ -101,6 +115,13 @@ class MainWindow(QMainWindow):
                     self.active.toggle()
                 self.active = i
             if self.active.text() == 'delete':
+                self.annotator.image = self.files.currentItem()
+                filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+                lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
+                if os.path.exists(os.path.join(lbl_dir, filename)):
+                    file = open(os.path.join(lbl_dir, filename), 'w')
+                    file.write('')
+                    file.close()
                 self.active.toggle()
                 self.draw.clearCanvas()
                 if self.lastActive is not None:
@@ -116,48 +137,207 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def prev(self):
-        self.files.prev()
+        if self.workingDirectory is not None:
+            a = self.draw.finish()
 
-    @Slot()
-    def next(self):
-        self.files.next()
-        a = self.draw.finish()
-        print(a)
-        if self.draw.activeClass is not None:
-            filename = self.annotator.image.base[:len(self.annotator.image.base)-4] + '.txt'
-            imgdir = self.annotator.image.name[:len(self.annotator.image.name)-len(self.annotator.image.base)]
-            print(imgdir)
-            print(filename)
-            print(self.workingDirectory[0])
-            if self.workingDirectory is not None:
-                lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
-                cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
-                if os.path.exists(os.path.join(lbl_dir, filename)):
-                    with open(os.path.join(lbl_dir, filename), 'a') as fn:
-                        for _ in a:
-                            fn.write(_)
-                            fn.write('\n')
-                        fn.close()
-                else:
-                    if os.path.exists(lbl_dir):
-                        with open(os.path.join(lbl_dir, filename), 'x') as fn:
+            lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
+            cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
+
+            if self.annotator.image is not None:
+                filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+                imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
+                if self.workingDirectory is not None:
+                    if os.path.exists(os.path.join(lbl_dir, filename)):
+                        with open(os.path.join(lbl_dir, filename), 'a') as fn:
                             for _ in a:
                                 fn.write(_)
                                 fn.write('\n')
                             fn.close()
                     else:
-                        os.mkdir(lbl_dir)
-                        with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                        if os.path.exists(lbl_dir):
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                        else:
+                            os.mkdir(lbl_dir)
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                    if os.path.exists(cp_img_dir):
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+                    else:
+                        os.mkdir(cp_img_dir)
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+            self.draw.clearCanvas()
+            self.files.prev()
+            self.getPrev(lbl_dir)
+
+    @Slot()
+    def next(self):
+        if self.workingDirectory is not None:
+            a = self.draw.finish()
+
+            lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
+            cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
+
+            if self.annotator.image is not None:
+                filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+                imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
+                if self.workingDirectory is not None:
+                    if os.path.exists(os.path.join(lbl_dir, filename)):
+                        with open(os.path.join(lbl_dir, filename), 'a') as fn:
                             for _ in a:
                                 fn.write(_)
                                 fn.write('\n')
                             fn.close()
-                if os.path.exists(cp_img_dir):
-                    shutil.copy((imgdir+self.annotator.image.base), cp_img_dir)
-                else:
-                    os.mkdir(cp_img_dir)
-                    shutil.copy((imgdir+self.annotator.image.base), cp_img_dir)
-        self.draw.partialClear()
+                    else:
+                        if os.path.exists(lbl_dir):
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                        else:
+                            os.mkdir(lbl_dir)
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                    if os.path.exists(cp_img_dir):
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+                    else:
+                        os.mkdir(cp_img_dir)
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+            self.draw.clearCanvas()
+            self.files.next()
+            self.getPrev(lbl_dir)
+
+    def getPrev(self, lbl_dir):
+        self.classes.save_classes(widget.workingDirectory[0])
+        self.annotator.image = self.files.currentItem()
+        filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+        if os.path.exists(os.path.join(lbl_dir, filename)):
+            print(os.path.join(lbl_dir, filename))
+            file = open(os.path.join(lbl_dir, filename), 'r')
+            c = []
+            for line in file:
+                if line != '':
+                    c.append(line.removesuffix('\n'))
+            file.close()
+
+            # Remove the class header
+            for o in range(len(c)):
+                for i in c[o]:
+                    x = ''
+                    if i != '.':
+                        if i == ' ':
+                            b = o
+                            print((c[b])[len(x) + 2:])
+                            c.__setitem__(b, c[b][len(x) + 2:])
+                            break
+                        else:
+                            x += i
+                    else:
+                        break
+            # Draw the loaded annotations
+            listlist = []
+            pairtag = []
+            pcount = 0
+            x = ''
+            for o in c:
+                for i in o:
+                    if i == " ":
+                        pairtag.append(x)
+                        pcount += 1
+                        if pcount == 2:
+                            listlist.append(pairtag)
+                            pairtag = []
+                            pcount = 0
+                        x = ''
+                    else:
+                        x += i
+            points = []
+            f = None
+            f_c = 0
+            set_f = 1
+            for i in listlist:
+                if set_f == 1:
+                    f = i
+                    set_f = 0
+                x = int(float(i[0]) * 640)
+                y = int(float(i[1]) * 640)
+                points.append(QPoint(x, y))
+                if i == f:
+                    f_c += 1
+                    if f_c == 2:
+                        set_f = 1
+                        f_c = 0
+                        self.draw.prev_anns.append(points)
+                        points = []
+            self.draw.updateCanvas()
+
+    @Slot()
+    def create_set(self):
+        if self.workingDirectory[0] is not None:
+            img_path = os.path.join(self.workingDirectory[0], 'images')
+            lbl_path = os.path.join(self.workingDirectory[0], 'labels')
+            train_img_list, p_30 = partition_pct(os.listdir(img_path), .7)
+            valid_img_list, test_img_list = partition_pct(p_30, .666)
+            print(train_img_list, test_img_list, valid_img_list)
+            name = project_utils.getRandomName()
+            datasetdir = os.path.join(self.workingDirectory[0], f'dataset_{name}')
+            os.mkdir(datasetdir)
+            os.mkdir(os.path.join(datasetdir, 'train'))
+            os.mkdir(os.path.join(datasetdir, 'train/images'))
+            os.mkdir(os.path.join(datasetdir, 'train/labels'))
+            os.mkdir(os.path.join(datasetdir, 'valid'))
+            os.mkdir(os.path.join(datasetdir, 'valid/images'))
+            os.mkdir(os.path.join(datasetdir, 'valid/labels'))
+            os.mkdir(os.path.join(datasetdir, 'test'))
+            os.mkdir(os.path.join(datasetdir, 'test/images'))
+            os.mkdir(os.path.join(datasetdir, 'test/labels'))
+            for i in os.listdir(lbl_path):
+                name = ''
+                for x in i:
+                    if x == '.':
+                        print(name)
+                        break
+                    else:
+                        name += x
+                print(f'{name}.txt')
+
+                for o in train_img_list:
+                    if f'{name}' == o.removesuffix('.jpg'):
+                        shutil.copy(os.path.join(img_path, f'{name}.jpg'), os.path.join(datasetdir, 'train/images'))
+                        shutil.copy(os.path.join(lbl_path, f'{name}.txt'), os.path.join(datasetdir, 'train/labels'))
+                for o in test_img_list:
+                    if f'{name}' == o.removesuffix('.jpg'):
+                        shutil.copy(os.path.join(img_path, f'{name}.jpg'), os.path.join(datasetdir, 'test/images'))
+                        shutil.copy(os.path.join(lbl_path, f'{name}.txt'), os.path.join(datasetdir, 'test/labels'))
+                for o in valid_img_list:
+                    if f'{name}' == o.removesuffix('.jpg'):
+                        shutil.copy(os.path.join(img_path, f'{name}.jpg'), os.path.join(datasetdir, 'valid/images'))
+                        shutil.copy(os.path.join(lbl_path, f'{name}.txt'), os.path.join(datasetdir, 'valid/labels'))
+            self.create_yaml(datasetdir)
+
+    def create_yaml(self, datasetdir):
+        path = os.path.join(datasetdir, 'data.yaml')
+        file = open(path, 'w')
+        file.write('train: ./train/images\n')
+        file.write('val: ./valid/images\n')
+        file.write('test: ./test/images\n')
+        file.write('\n')
+        file.write(f'nc: {len(self.classes.classes)}\n')
+        file.write(f'names: {self.classes.classes}')
 
     @Slot()
     def new_ann(self):
@@ -209,6 +389,9 @@ class OtherLoop(QRunnable, QObject):
                 self.n.draw.activeClass = None
             time.sleep(.1)
 
+    def stop(self):
+        self.running = False
+
 
 if __name__ == "__main__":
 
@@ -220,6 +403,9 @@ if __name__ == "__main__":
     # ALL Signals below this comment
 
     widget.runner.getWidgets.connect(widget.getActive)
+
     if app.exit():
         widget.runner.stop()
+        widget.runner2.stop()
+
     sys.exit(app.exec())
