@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QTextBrows
 from PySide6.QtCore import Signal, Slot, QRunnable, QObject, Qt, QThreadPool, QUrl, QEvent
 from PySide6.QtGui import QAction
 import webbrowser
+from Id_Recognition.Gui.Annotation_Window.mainwindow import *
 
 # Important:
 # You need to run the following command to generate the ui_form.py file

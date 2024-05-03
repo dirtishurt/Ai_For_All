@@ -1,7 +1,7 @@
 import os
 
 import cv2
-from PySide6.QtWidgets import  QWidget, QLabel, QApplication, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap
 import torch
@@ -9,10 +9,11 @@ from ultralytics import YOLO
 
 pyqtSignal = Signal
 pyqtSlot = Slot
+
+
 class Thread(QThread):
-
-
     changePixmap = pyqtSignal(QImage)
+
     def run(self):
         exists = False
         if not torch.cuda.is_available():
@@ -20,7 +21,7 @@ class Thread(QThread):
         while not exists:
             self.dataset = os.path.abspath(input('Enter Path').strip())
             exists = os.path.exists(self.dataset)
-        self.isRunning=True
+        self.isRunning = True
         model = YOLO(os.path.abspath(self.dataset))
         cap = cv2.VideoCapture(0)
         while self.isRunning:
@@ -35,7 +36,7 @@ class Thread(QThread):
                 cv2.waitKey(1)
 
     def stop(self):
-        self.isRunning=False
+        self.isRunning = False
         self.quit()
         self.terminate()
 
@@ -43,6 +44,7 @@ class Thread(QThread):
         results = model.predict(frame, conf=.56, verbose=False)
         an_frame = results[0].plot()
         return an_frame
+
 
 class Camera(QWidget):
     def __init__(self, a):
@@ -52,9 +54,10 @@ class Camera(QWidget):
         self.title = 'Camera'
         self.layout = QVBoxLayout()
         self.initUI(a)
+
     @pyqtSlot(QImage)
     def setImage(self, image):
-        #update image
+        # update image
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def initUI(self, a):
