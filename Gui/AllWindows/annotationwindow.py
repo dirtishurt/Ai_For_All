@@ -48,7 +48,6 @@ class MainWindow(QMainWindow):
         self.lastActive = None
         self.lineedit = self.ui.lineEdit
 
-
         self.classes = self.ui.Classes
         self.files = self.ui.Files
         self.annotator = self.ui.Annotator
@@ -66,6 +65,8 @@ class MainWindow(QMainWindow):
         self.draw.setMode('poly')
         self.hide()
 
+
+
     @Slot()
     def setWorkingDirectory(self):
         if self.dialog.exec():
@@ -79,10 +80,13 @@ class MainWindow(QMainWindow):
         self.hide()
         self.parent().show()
 
+
     @Slot()
     def show_self(self):
         self.parent().hide()
         self.show()
+        self.setWindowState(Qt.WindowState.WindowMaximized)
+        self.draw.updateSize(self.size())
 
 
     @Slot()

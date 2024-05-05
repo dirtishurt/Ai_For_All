@@ -4,14 +4,14 @@ import torch
 from ultralytics import YOLO
 import os
 
-torch.compile()
-
-torch.cuda.init()
-
 
 # TODO Implement this in the gui and fix the labels being broken
 def runTrain(yaml_location, epochs=100, patience=20, devices=None, pretrained=False,
              modelLocation='Working_Models/base-ultralytics/yolov8n-seg.pt'):
+    torch.compile()
+
+    torch.cuda.init()
+
     """
     epochs adjusts length of training, patience adjusts the time it waits for improvement,
     do not add devices unless a cuda compatible gpu is detected

@@ -6,6 +6,7 @@ import Gui.AllWindows.annotationwindow as ann_Window, Gui.AllWindows.initialwind
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
     initial = iWindow.MainWindow()
     annWindow = ann_Window.MainWindow(initial)
     initial.ui.menuCreateModels.actions()[0].triggered.connect(annWindow.show_self)

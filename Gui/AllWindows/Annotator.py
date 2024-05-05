@@ -1,6 +1,6 @@
 import os
 import cv2
-from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QGridLayout
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap, QColor, QPainter
 
@@ -14,16 +14,18 @@ class Annotator(QWidget):
         self.label = QLabel(a)
         self.th = None
         self.title = 'Annotator'
-        self.layout = QVBoxLayout()
-        self.initUI(a)
+        self.layout = QGridLayout()
+        self.initUI()
         self.activeClass = None
         self.image = None
         self.lastImage = self.image
 
+
+
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImageInPlace(image))
 
-    def initUI(self, a):
+    def initUI(self):
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
 
@@ -32,3 +34,5 @@ class Annotator(QWidget):
             p = QImage(self.image.name).scaled(640, 640)
             self.setImage(p)
             self.lastImage = self.image.name
+
+

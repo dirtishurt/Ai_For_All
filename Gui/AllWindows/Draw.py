@@ -1,6 +1,6 @@
 import time
 
-from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QGridLayout
 from PySide6.QtCore import QThread, Qt, Signal, Slot, QSize, QLine, QPoint
 from PySide6.QtGui import QImage, QPixmap, QColor, QPainter
 
@@ -11,16 +11,18 @@ class Draw(QWidget):
         self.last_y = None
         self.last_x = None
         self.window = a
+        self.x = 640
+        self.y = 640
         self.label = QLabel(a)
-        self.canvas = QPixmap(a.size()).scaled(QSize(640, 640))
+        self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
         self.title = 'Annotator'
         self.activeClass = None
-
         self.mode = 'Poly'
+        self.layout = QGridLayout()
+        
 
-        self.layout = QVBoxLayout()
         self.initUI()
         self.click = 0
         self.cords = []
@@ -34,6 +36,11 @@ class Draw(QWidget):
         self.mode = mode
         #self.clearCanvas()
         #self.deleteAllAnnotations()
+
+    def updateSize(self, x):
+        self.x, self.y = x.width(), x.height()
+        self.resize(QSize(self.x, self.y))
+        print(self.x, self.y)
 
     def mousePressEvent(self, e):
         if self.mode == 'poly':
@@ -101,7 +108,7 @@ class Draw(QWidget):
         self.cords = []
         self.pair = []
         self.finished_annots = []
-        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
 
@@ -111,14 +118,14 @@ class Draw(QWidget):
         self.finished_annots = []
         self.prev_anns = []
         self.pair = []
-        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
 
     def clearLastAnnotation(self):
         self.finished_annots.pop()
         self.pair = []
-        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
 
@@ -126,7 +133,7 @@ class Draw(QWidget):
         self.label.clear()
         self.cords = []
         self.pair = []
-        self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+        self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
 
@@ -137,7 +144,7 @@ class Draw(QWidget):
                 if len(self.cords) == 1:
                     self.cords.pop()
                 self.label.clear()
-                self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+                self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
                 self.canvas.fill(QColor(255, 255, 255, 0))
                 self.label.setPixmap(self.canvas)
                 self.updateCanvas()
@@ -146,7 +153,7 @@ class Draw(QWidget):
                 for i in range(5):
                     self.cords.pop()
                 self.label.clear()
-                self.canvas = QPixmap(self.window.size()).scaled(QSize(640, 640))
+                self.canvas = QPixmap(self.size()).scaled(QSize(self.x, self.y))
                 self.canvas.fill(QColor(255, 255, 255, 0))
                 self.label.setPixmap(self.canvas)
                 self.updateCanvas()
