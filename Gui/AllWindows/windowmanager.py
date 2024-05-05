@@ -1,12 +1,13 @@
 from PySide6.QtWidgets import QApplication
 import sys
 
-import annotationwindow as annWindow, initialwindow as iWindow
+import Gui.AllWindows.annotationwindow as ann_Window, Gui.AllWindows.initialwindow as iWindow
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     initial = iWindow.MainWindow()
-    annWindow = annWindow.MainWindow(initial)
+    annWindow = ann_Window.MainWindow(initial)
     initial.ui.menuCreateModels.actions()[0].triggered.connect(annWindow.show_self)
     annWindow.ui.menuReturn.actions()[0].triggered.connect(annWindow.return_to_main)
     initial.show_self()
