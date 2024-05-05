@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'form.ui'
+## Form generated from reading UI file 'form2.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -112,6 +112,8 @@ class Ui_MainWindow(object):
         self.actionSave_and_Return.setObjectName(u"actionSave_and_Return")
         self.actionFrom_Current_Annotations = QAction(MainWindow)
         self.actionFrom_Current_Annotations.setObjectName(u"actionFrom_Current_Annotations")
+        self.actionToggle = QAction(MainWindow)
+        self.actionToggle.setObjectName(u"actionToggle")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -137,13 +139,6 @@ class Ui_MainWindow(object):
         self.Annotator.setMouseTracking(True)
         self.Annotator.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.Annotator.setAutoFillBackground(True)
-        self.Draw = Draw(self.Annotator)
-        self.Draw.setObjectName(u"Draw")
-        self.Draw.setGeometry(QRect(8, 8, 624, 624))
-        self.Draw.setMinimumSize(QSize(624, 624))
-        self.Draw.setMaximumSize(QSize(624, 624))
-        self.Draw.setAutoFillBackground(False)
-        self.Draw.setStyleSheet(u"background-color: rgba(0, 0, 0, 0)")
         self.Files = Files(self.centralwidget)
         self.Files.setObjectName(u"Files")
         self.Files.setGeometry(QRect(640, 349, 256, 291))
@@ -230,6 +225,10 @@ class Ui_MainWindow(object):
         palette3.setBrush(QPalette.Disabled, QPalette.Button, brush6)
         self.New_Ann.setPalette(palette3)
         self.New_Ann.setToolTipDuration(1000)
+        self.Draw = Draw(self.centralwidget)
+        self.Draw.setObjectName(u"Draw")
+        self.Draw.setGeometry(QRect(0, 0, 640, 640))
+        self.Draw.setMinimumSize(QSize(640, 640))
         MainWindow.setCentralWidget(self.centralwidget)
         self.New_Ann.raise_()
         self.Prev.raise_()
@@ -241,6 +240,7 @@ class Ui_MainWindow(object):
         self.line_2.raise_()
         self.line_3.raise_()
         self.lineEdit.raise_()
+        self.Draw.raise_()
         self.toolBar = QToolBar(MainWindow)
         self.toolBar.setObjectName(u"toolBar")
         self.toolBar.setEnabled(True)
@@ -329,6 +329,8 @@ class Ui_MainWindow(object):
         self.menuView.setObjectName(u"menuView")
         self.menuCreate_Training_Set = QMenu(self.menuBar)
         self.menuCreate_Training_Set.setObjectName(u"menuCreate_Training_Set")
+        self.menuTest = QMenu(self.menuBar)
+        self.menuTest.setObjectName(u"menuTest")
         MainWindow.setMenuBar(self.menuBar)
 
         self.toolBar.addAction(self.actionBox)
@@ -342,6 +344,7 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuSet_Project_Directory.menuAction())
         self.menuBar.addAction(self.menuView.menuAction())
         self.menuBar.addAction(self.menuCreate_Training_Set.menuAction())
+        self.menuBar.addAction(self.menuTest.menuAction())
         self.menuReturn.addAction(self.actionSave_and_Return)
         self.menuSave.addAction(self.actionSave)
         self.menuOpen_Images.addAction(self.actionSelect_Directory)
@@ -349,6 +352,7 @@ class Ui_MainWindow(object):
         self.menuSet_Project_Directory.addAction(self.actionSelect_Folder)
         self.menuView.addAction(self.actionProject_Directory)
         self.menuCreate_Training_Set.addAction(self.actionFrom_Current_Annotations)
+        self.menuTest.addAction(self.actionToggle)
 
         self.retranslateUi(MainWindow)
 
@@ -390,6 +394,7 @@ class Ui_MainWindow(object):
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.actionSave_and_Return.setText(QCoreApplication.translate("MainWindow", u"Save and Return", None))
         self.actionFrom_Current_Annotations.setText(QCoreApplication.translate("MainWindow", u"From Current Annotations", None))
+        self.actionToggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
 #if QT_CONFIG(whatsthis)
         self.Files.setWhatsThis("")
 #endif // QT_CONFIG(whatsthis)
@@ -415,5 +420,6 @@ class Ui_MainWindow(object):
         self.menuSet_Project_Directory.setTitle(QCoreApplication.translate("MainWindow", u"Set Project Directory", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
         self.menuCreate_Training_Set.setTitle(QCoreApplication.translate("MainWindow", u"Create Training Set", None))
+        self.menuTest.setTitle(QCoreApplication.translate("MainWindow", u"Test", None))
     # retranslateUi
 

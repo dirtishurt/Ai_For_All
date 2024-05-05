@@ -31,7 +31,7 @@ class Thread(QThread):
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(460, 390, Qt.KeepAspectRatio)
+                p = convertToQtFormat.scaled(640, 640, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
                 cv2.waitKey(1)
 
@@ -53,16 +53,21 @@ class Camera(QWidget):
         self.th = None
         self.title = 'Camera'
         self.layout = QVBoxLayout()
-        self.initUI(a)
+
 
     @pyqtSlot(QImage)
     def setImage(self, image):
         # update image
         self.label.setPixmap(QPixmap.fromImage(image))
 
-    def initUI(self, a):
+    def initUI(self):
         self.th = Thread(self)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
+
+    def exit(self):
+        self.window().exit()
+
+

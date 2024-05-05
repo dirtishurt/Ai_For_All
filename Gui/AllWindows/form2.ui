@@ -942,12 +942,19 @@
     </property>
     <addaction name="actionFrom_Current_Annotations"/>
    </widget>
+   <widget class="QMenu" name="menuTest">
+    <property name="title">
+     <string>Test</string>
+    </property>
+    <addaction name="actionToggle"/>
+   </widget>
    <addaction name="menuReturn"/>
    <addaction name="menuSave"/>
    <addaction name="menuOpen_Images"/>
    <addaction name="menuSet_Project_Directory"/>
    <addaction name="menuView"/>
    <addaction name="menuCreate_Training_Set"/>
+   <addaction name="menuTest"/>
   </widget>
   <action name="actionBox">
    <property name="checkable">
@@ -961,7 +968,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../Annotation Window/bounding-box.png</normaloff>../Annotation Window/bounding-box.png</iconset>
+     <normaloff>bounding-box.png</normaloff>bounding-box.png</iconset>
    </property>
    <property name="text">
     <string>Box</string>
@@ -991,7 +998,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../Annotation Window/polygon.png</normaloff>../Annotation Window/polygon.png</iconset>
+     <normaloff>polygon.png</normaloff>polygon.png</iconset>
    </property>
    <property name="text">
     <string>PolygonTool</string>
@@ -1021,7 +1028,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../Annotation Window/delete-icon-1864x2048-bp2i0gor.png</normaloff>../Annotation Window/delete-icon-1864x2048-bp2i0gor.png</iconset>
+     <normaloff>delete-icon-1864x2048-bp2i0gor.png</normaloff>delete-icon-1864x2048-bp2i0gor.png</iconset>
    </property>
    <property name="text">
     <string>delete</string>
@@ -1042,7 +1049,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../Annotation Window/2349854.png</normaloff>../Annotation Window/2349854.png</iconset>
+     <normaloff>2349854.png</normaloff>2349854.png</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -1092,6 +1099,11 @@
   <action name="actionFrom_Current_Annotations">
    <property name="text">
     <string>From Current Annotations</string>
+   </property>
+  </action>
+  <action name="actionToggle">
+   <property name="text">
+    <string>Toggle</string>
    </property>
   </action>
  </widget>

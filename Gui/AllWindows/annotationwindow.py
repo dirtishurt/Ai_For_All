@@ -7,31 +7,38 @@ import sys
 import time
 
 import cv2
-from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog, QWidget
 import PySide6.QtCore
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction, QKeyEvent, QColor, QPixmap
 from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize, QPoint
 
-import Id_Recognition.project_utils
+try:
+    import Id_Recognition.project_utils
+except:
+    import project_utils
 # Important:
-# You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
-#     pyside2-uic form.ui -o ui_form.py
-from ui_form import Ui_MainWindow
-from Id_Recognition.project_utils import resize_img, partition_pct
+# You need to run the following command to generate the ui_form2.py file
+#     pyside6-uic form2.ui -o ui_form2.py, or
+#     pyside2-uic form2.ui -o ui_form2.py
+from ui_form2 import Ui_MainWindow as ui
+
+try:
+    from Id_Recognition.project_utils import resize_img, partition_pct
+except:
+    from project_utils import resize_img, partition_pct
 
 
 class MainWindow(QMainWindow):
     keysPressed = Signal(QEvent)
 
     def __init__(self, parent=None):
-        super().__init__(parent)
+        super(MainWindow, self).__init__(parent)
         self.dialog = QFileDialog()
         self.workingDirectory = None
         self.dialog.setFileMode(QFileDialog.FileMode.Directory)
         self.last_key = None
         self.file_path = None
-        self.ui = Ui_MainWindow()
+        self.ui = ui()
         self.ui.setupUi(self)
         self.toolbar = self.ui.toolBar
         self.runner = None
@@ -40,6 +47,8 @@ class MainWindow(QMainWindow):
         self.active = None
         self.lastActive = None
         self.lineedit = self.ui.lineEdit
+
+
         self.classes = self.ui.Classes
         self.files = self.ui.Files
         self.annotator = self.ui.Annotator
@@ -53,6 +62,9 @@ class MainWindow(QMainWindow):
         self.ui.menuView.actions()[0].triggered.connect(self.viewWorkingDirectory)
         self.ui.menuSave.actions()[0].triggered.connect(self.SaveAll)
         self.ui.menuCreate_Training_Set.actions()[0].triggered.connect(self.create_set)
+        # self.ui.menuTest.actions()[0].triggered.connect(self.show())
+        self.draw.setMode('poly')
+        self.hide()
 
     @Slot()
     def setWorkingDirectory(self):
@@ -61,6 +73,17 @@ class MainWindow(QMainWindow):
         print(self.workingDirectory)
         self.classes.load_classes(self.workingDirectory[0])
         print(len(self.classes.classes))
+
+    @Slot()
+    def return_to_main(self):
+        self.hide()
+        self.parent().show()
+
+    @Slot()
+    def show_self(self):
+        self.parent().hide()
+        self.show()
+
 
     @Slot()
     def SaveAll(self):
@@ -111,7 +134,13 @@ class MainWindow(QMainWindow):
         if i.isChecked():
             if self.active != i:
                 self.lastActive = self.active
+
                 if self.active is not None:
+
+                    if i.text() == 'Box':
+                        self.draw.setMode('box')
+                    if i.text() == 'PolygonTool':
+                        self.draw.setMode('poly')
                     self.active.toggle()
                 self.active = i
             if self.active.text() == 'delete':
@@ -123,7 +152,7 @@ class MainWindow(QMainWindow):
                     file.write('')
                     file.close()
                 self.active.toggle()
-                self.draw.clearCanvas()
+                self.draw.deleteAllAnnotations()
                 if self.lastActive is not None:
                     self.active = self.lastActive
                     self.active.toggle()
@@ -222,7 +251,7 @@ class MainWindow(QMainWindow):
             self.getPrev(lbl_dir)
 
     def getPrev(self, lbl_dir):
-        self.classes.save_classes(widget.workingDirectory[0])
+        self.classes.save_classes(self.workingDirectory[0])
         self.annotator.image = self.files.currentItem()
         filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
         if os.path.exists(os.path.join(lbl_dir, filename)):
@@ -273,7 +302,7 @@ class MainWindow(QMainWindow):
                 if set_f == 1:
                     f = i
                     set_f = 0
-                x = int(float(i[0]) * 640)-9
+                x = int(float(i[0]) * 640) - 9
                 y = int(float(i[1]) * 640)
                 points.append(QPoint(x, y))
                 if i == f:
@@ -393,19 +422,6 @@ class OtherLoop(QRunnable, QObject):
         self.running = False
 
 
-if __name__ == "__main__":
 
-    app = QApplication(sys.argv)
-    widget = MainWindow()
 
-    widget.show()
-    widget.getactions()
-    # ALL Signals below this comment
 
-    widget.runner.getWidgets.connect(widget.getActive)
-
-    if app.exit():
-        widget.runner.stop()
-        widget.runner2.stop()
-
-    sys.exit(app.exec())
