@@ -199,34 +199,6 @@
     <property name="autoFillBackground">
      <bool>true</bool>
     </property>
-    <widget class="Draw" name="Draw" native="true">
-     <property name="geometry">
-      <rect>
-       <x>8</x>
-       <y>8</y>
-       <width>624</width>
-       <height>624</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>624</width>
-       <height>624</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>624</width>
-       <height>624</height>
-      </size>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(0, 0, 0, 0)</string>
-     </property>
-    </widget>
    </widget>
    <widget class="Files" name="Files">
     <property name="geometry">
@@ -545,6 +517,22 @@
      <string>New Annotation</string>
     </property>
    </widget>
+   <widget class="Draw" name="Draw" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>640</width>
+      <height>640</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>640</width>
+      <height>640</height>
+     </size>
+    </property>
+   </widget>
    <zorder>New_Ann</zorder>
    <zorder>Prev</zorder>
    <zorder>Next</zorder>
@@ -555,6 +543,7 @@
    <zorder>line_2</zorder>
    <zorder>line_3</zorder>
    <zorder>lineEdit</zorder>
+   <zorder>Draw</zorder>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="enabled">
@@ -972,7 +961,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>bounding-box.png</normaloff>bounding-box.png</iconset>
+     <normaloff>../Annotation Window/bounding-box.png</normaloff>../Annotation Window/bounding-box.png</iconset>
    </property>
    <property name="text">
     <string>Box</string>
@@ -1002,7 +991,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>polygon.png</normaloff>polygon.png</iconset>
+     <normaloff>../Annotation Window/polygon.png</normaloff>../Annotation Window/polygon.png</iconset>
    </property>
    <property name="text">
     <string>PolygonTool</string>
@@ -1032,7 +1021,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>delete-icon-1864x2048-bp2i0gor.png</normaloff>delete-icon-1864x2048-bp2i0gor.png</iconset>
+     <normaloff>../Annotation Window/delete-icon-1864x2048-bp2i0gor.png</normaloff>../Annotation Window/delete-icon-1864x2048-bp2i0gor.png</iconset>
    </property>
    <property name="text">
     <string>delete</string>
@@ -1053,7 +1042,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>2349854.png</normaloff>2349854.png</iconset>
+     <normaloff>../Annotation Window/2349854.png</normaloff>../Annotation Window/2349854.png</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
