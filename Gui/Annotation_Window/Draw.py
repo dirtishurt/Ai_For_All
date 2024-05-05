@@ -30,7 +30,7 @@ class Draw(QWidget):
 
     def mousePressEvent(self, e):
 
-        p1 = QPoint((e.position().x()) - 8 / 1, (e.position().y()) / 1)
+        p1 = QPoint((e.position().x()) - 9 / 1, (e.position().y()) / 1)
         self.cords.append(p1)
         self.updateCanvas()
         time.sleep(.1)
@@ -103,7 +103,7 @@ class Draw(QWidget):
             lst_str = f'{self.activeClass} '
             self.prev_anns.append(self.cords)
             for i in self.cords:
-                lst_str += f'{(i.x() / 640)} '
+                lst_str += f'{((i.x()+9) / 640)} '
                 lst_str += f'{(i.y() / 640)} '
             self.finished_annots.append(lst_str)
             self.cords = []
@@ -116,9 +116,9 @@ class Draw(QWidget):
             else:
                 lst_str = ''
             for i in self.cords:
-                lst_str += f'{(i.x() / 640)} '
+                lst_str += f'{((i.x()+9) / 640)} '
                 lst_str += f'{(i.y() / 640)} '
-            lst_str += f'{self.cords[0].x() / 640} '
+            lst_str += f'{(self.cords[0].x()+9) / 640} '
             lst_str += f'{self.cords[0].y() / 640} '
             self.finished_annots.append(lst_str)
             a = self.finished_annots

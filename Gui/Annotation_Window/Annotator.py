@@ -21,7 +21,7 @@ class Annotator(QWidget):
         self.lastImage = self.image
 
     def setImage(self, image):
-        self.label.setPixmap(QPixmap.fromImage(image))
+        self.label.setPixmap(QPixmap.fromImageInPlace(image))
 
     def initUI(self, a):
         self.layout.addWidget(self.label)
