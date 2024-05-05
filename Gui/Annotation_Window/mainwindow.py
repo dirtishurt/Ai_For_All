@@ -12,13 +12,13 @@ import PySide6.QtCore
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction, QKeyEvent, QColor, QPixmap
 from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize, QPoint
 
-import project_utils
+import Id_Recognition.project_utils
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
-from project_utils import resize_img, partition_pct
+from Id_Recognition.project_utils import resize_img, partition_pct
 
 
 class MainWindow(QMainWindow):
