@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>560</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>700</width>
-    <height>560</height>
+    <width>1024</width>
+    <height>768</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>700</width>
-    <height>560</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="font">
@@ -48,14 +48,14 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>800</width>
-     <height>500</height>
+     <width>16777215</width>
+     <height>16777215</height>
     </size>
    </property>
    <property name="baseSize">
     <size>
-     <width>1000</width>
-     <height>800</height>
+     <width>1600</width>
+     <height>900</height>
     </size>
    </property>
    <property name="palette">
@@ -104,307 +104,396 @@
      </disabled>
     </palette>
    </property>
-   <widget class="QPushButton" name="run_button">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>430</y>
-      <width>81</width>
-      <height>40</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>0</number>
     </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Text">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="ButtonText">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Text">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="ButtonText">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
+    <property name="topMargin">
+     <number>0</number>
     </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI Semibold</family>
-      <pointsize>18</pointsize>
-      <bold>true</bold>
-      <underline>false</underline>
-      <kerning>true</kerning>
-     </font>
+    <property name="rightMargin">
+     <number>0</number>
     </property>
-    <property name="text">
-     <string>Run</string>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
-   </widget>
-   <widget class="QSlider" name="confidence_slider">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>430</y>
-      <width>371</width>
-      <height>61</height>
-     </rect>
+    <property name="spacing">
+     <number>0</number>
     </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Accent">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Accent">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Accent">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI Semibold</family>
-      <pointsize>12</pointsize>
-      <bold>true</bold>
-      <underline>false</underline>
-      <kerning>true</kerning>
-     </font>
-    </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Horizontal</enum>
-    </property>
-    <property name="tickPosition">
-     <enum>QSlider::TickPosition::TicksAbove</enum>
-    </property>
-    <property name="tickInterval">
-     <number>5</number>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="detected_output">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>20</y>
-      <width>171</width>
-      <height>391</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="confidence_percent">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>450</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="placeholderText">
-     <string>percent</string>
-    </property>
-    <property name="clearButtonEnabled">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="Camera" name="camer_output" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>461</width>
-      <height>391</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="end_button">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>430</y>
-      <width>85</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="palette">
-     <palette>
-      <active>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Text">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="ButtonText">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </active>
-      <inactive>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="Text">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>255</red>
-          <green>255</green>
-          <blue>255</blue>
-         </color>
-        </brush>
-       </colorrole>
-       <colorrole role="ButtonText">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>70</red>
-          <green>180</green>
-          <blue>127</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </inactive>
-      <disabled>
-       <colorrole role="Button">
-        <brush brushstyle="SolidPattern">
-         <color alpha="255">
-          <red>49</red>
-          <green>49</green>
-          <blue>49</blue>
-         </color>
-        </brush>
-       </colorrole>
-      </disabled>
-     </palette>
-    </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI Semibold</family>
-      <pointsize>18</pointsize>
-      <bold>true</bold>
-      <underline>false</underline>
-      <kerning>true</kerning>
-     </font>
-    </property>
-    <property name="text">
-     <string>End</string>
-    </property>
-   </widget>
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="Camera" name="camer_output" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QSlider" name="confidence_slider">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="palette">
+           <palette>
+            <active>
+             <colorrole role="Accent">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>70</red>
+                <green>180</green>
+                <blue>127</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </active>
+            <inactive>
+             <colorrole role="Accent">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>70</red>
+                <green>180</green>
+                <blue>127</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </inactive>
+            <disabled>
+             <colorrole role="Accent">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>70</red>
+                <green>180</green>
+                <blue>127</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </disabled>
+           </palette>
+          </property>
+          <property name="font">
+           <font>
+            <family>Segoe UI Semibold</family>
+            <pointsize>12</pointsize>
+            <bold>true</bold>
+            <underline>false</underline>
+            <kerning>true</kerning>
+           </font>
+          </property>
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>95</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="pageStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>5</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TickPosition::TicksAbove</enum>
+          </property>
+          <property name="tickInterval">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignRight">
+         <widget class="QLineEdit" name="confidence_percent">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="placeholderText">
+           <string>Confidence:</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" rowspan="2" colspan="2">
+       <widget class="QListView" name="listView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>264</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="end_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>132</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>132</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>70</red>
+              <green>180</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>70</red>
+              <green>180</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI Semibold</family>
+          <pointsize>18</pointsize>
+          <bold>true</bold>
+          <underline>false</underline>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="text">
+         <string>End</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="run_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>132</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>132</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>70</red>
+              <green>180</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>70</red>
+              <green>180</green>
+              <blue>127</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>49</red>
+              <green>49</green>
+              <blue>49</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI Semibold</family>
+          <pointsize>18</pointsize>
+          <bold>true</bold>
+          <underline>false</underline>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Run</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>700</width>
+     <width>1024</width>
      <height>33</height>
     </rect>
    </property>
@@ -424,21 +513,7 @@
     <property name="title">
      <string>Datasets</string>
     </property>
-    <widget class="QMenu" name="menuAdd">
-     <property name="title">
-      <string>Add</string>
-     </property>
-     <widget class="QMenu" name="menuAdd_To_Models">
-      <property name="title">
-       <string>Add_To_Models</string>
-      </property>
-      <addaction name="actionLoad"/>
-      <addaction name="actionAdd_2"/>
-     </widget>
-     <addaction name="menuAdd_To_Models"/>
-    </widget>
-    <addaction name="menuAdd"/>
-    <addaction name="actionRemove_2"/>
+    <addaction name="actionImport"/>
    </widget>
    <widget class="QMenu" name="menuCreateModels">
     <property name="title">
@@ -454,16 +529,22 @@
    </widget>
    <widget class="QMenu" name="menuLoad_Model">
     <property name="title">
-     <string>Load Model</string>
+     <string>Load Project</string>
     </property>
-    <addaction name="actionSelect_Files"/>
-    <addaction name="actionFrom_Project_Directory"/>
+    <addaction name="actionSelect_Project_Directory"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionOpen_ReadME"/>
    </widget>
    <addaction name="menuwhere_is_the_box"/>
    <addaction name="menuDatasets"/>
    <addaction name="menuCreateModels"/>
    <addaction name="menuLoad_Model"/>
    <addaction name="menuGithub"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -591,6 +672,21 @@
     <string>From Project Directory</string>
    </property>
   </action>
+  <action name="actionSelect_Project_Directory">
+   <property name="text">
+    <string>Select Project Directory</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionOpen_ReadME">
+   <property name="text">
+    <string>Open ReadME</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -606,30 +702,11 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>detected_output</tabstop>
   <tabstop>confidence_slider</tabstop>
   <tabstop>confidence_percent</tabstop>
-  <tabstop>run_button</tabstop>
-  <tabstop>end_button</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>confidence_percent</sender>
-   <signal>textEdited(QString)</signal>
-   <receiver>confidence_slider</receiver>
-   <slot>update()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>447</x>
-     <y>498</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>477</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>run_button</sender>
    <signal>clicked()</signal>
@@ -659,6 +736,22 @@
     <hint type="destinationlabel">
      <x>422</x>
      <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>confidence_percent</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>confidence_slider</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>447</x>
+     <y>498</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>477</y>
     </hint>
    </hints>
   </connection>

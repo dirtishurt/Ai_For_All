@@ -31,8 +31,7 @@ class Thread(QThread):
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(640, 640, Qt.KeepAspectRatio)
-                self.changePixmap.emit(p)
+                self.changePixmap.emit(convertToQtFormat)
                 cv2.waitKey(1)
 
     def stop(self):

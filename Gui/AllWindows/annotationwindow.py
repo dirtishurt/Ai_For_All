@@ -26,13 +26,16 @@ try:
     from Id_Recognition.project_utils import resize_img, partition_pct
 except:
     from project_utils import resize_img, partition_pct
+import pyautogui
 
 
 class MainWindow(QMainWindow):
     keysPressed = Signal(QEvent)
 
     def __init__(self, parent=None):
+
         super(MainWindow, self).__init__(parent)
+        self.screen_size = pyautogui.size()
         self.dialog = QFileDialog()
         self.workingDirectory = None
         self.dialog.setFileMode(QFileDialog.FileMode.Directory)
@@ -47,6 +50,7 @@ class MainWindow(QMainWindow):
         self.active = None
         self.lastActive = None
         self.lineedit = self.ui.lineEdit
+        self.pool = QThreadPool.globalInstance()
 
         self.classes = self.ui.Classes
         self.files = self.ui.Files
@@ -61,38 +65,54 @@ class MainWindow(QMainWindow):
         self.ui.menuView.actions()[0].triggered.connect(self.viewWorkingDirectory)
         self.ui.menuSave.actions()[0].triggered.connect(self.SaveAll)
         self.ui.menuCreate_Training_Set.actions()[0].triggered.connect(self.create_set)
+        self.setWindowState(QMainWindow.windowState(self).WindowMaximized)
         # self.ui.menuTest.actions()[0].triggered.connect(self.show())
-        self.draw.setMode('poly')
-        self.hide()
 
+        self.lastFile = None
+
+        self.draw.setMode('poly')
+        self.files.itemSelectionChanged.connect(self.get_selected)
+
+    def load_images(self):
+        if self.workingDirectory:
+            if os.path.exists(os.path.join(self.workingDirectory[0], 'image_paths.txt')):
+                path = os.path.join(self.workingDirectory[0], 'image_paths.txt')
+                if os.path.exists(path):
+                    file = open(path, 'r')
+                    c = []
+                    for line in file:
+                        if line != '':
+                            c.append(line.removesuffix('\n'))
+                    for i in c:
+                        self.files.filenames = [i]
+                        self.files.printfilenames()
+                    file.close()
 
 
     @Slot()
     def setWorkingDirectory(self):
+        self.opening = True
         if self.dialog.exec():
             self.workingDirectory = self.dialog.selectedFiles()
-        print(self.workingDirectory)
-        self.classes.load_classes(self.workingDirectory[0])
-        print(len(self.classes.classes))
+            self.load_images()
 
+        self.classes.load_classes(self.workingDirectory[0])
     @Slot()
     def return_to_main(self):
         self.hide()
-        self.parent().show()
 
 
     @Slot()
     def show_self(self):
-        self.parent().hide()
-        self.show()
-        self.setWindowState(Qt.WindowState.WindowMaximized)
-        self.draw.updateSize(self.size())
-
+        if self.workingDirectory:
+            self.classes.load_classes(self.workingDirectory[0])
+            self.load_images()
+        self.showFullScreen()
 
     @Slot()
     def SaveAll(self):
-        pass
-
+        self.classes.save_classes(self.workingDirectory[0])
+        #self.files.save_image_paths(self.workingDirectory[0])
     @Slot()
     def viewWorkingDirectory(self):
         if self.workingDirectory is not None:
@@ -104,12 +124,12 @@ class MainWindow(QMainWindow):
     @Slot()
     def fileSelectorDialog1(self):
         print(self.ui.menuOpen_Images.actions())
-        self.files.getFiles(1)
+        self.files.getFiles(1, self.workingDirectory[0])
 
     @Slot()
     def fileSelectorDialog2(self):
         print(self.ui.menuOpen_Images.actions())
-        self.files.getFiles(2)
+        self.files.getFiles(2, self.workingDirectory[0])
 
     def send_line_output(self):
         if self.lineedit.editingFinished:
@@ -126,12 +146,11 @@ class MainWindow(QMainWindow):
 
     def getactions(self):
         # threadCount = QThreadPool.globalInstance().maxThreadCount()
-        pool = QThreadPool.globalInstance()
 
         self.runner = Runnable(self.toolbar.actions())
         self.runner2 = OtherLoop(self)
-        pool.start(self.runner)
-        pool.start(self.runner2)
+        self.pool.start(self.runner)
+        self.pool.start(self.runner2)
 
     @Slot(QAction)
     def getActive(self, i):
@@ -209,6 +228,10 @@ class MainWindow(QMainWindow):
                         cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
             self.draw.clearCanvas()
             self.files.prev()
+            self.files.ref = self.files.currentItem()
+            self.annotator.image = self.files.currentItem()
+            self.annotator.changeImage()
+            self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
 
     @Slot()
@@ -252,7 +275,56 @@ class MainWindow(QMainWindow):
                         cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
             self.draw.clearCanvas()
             self.files.next()
+            self.files.ref = self.files.currentItem()
+            self.annotator.image = self.files.currentItem()
+            self.annotator.changeImage()
+            self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
+    @Slot()
+    def get_selected(self):
+        if self.workingDirectory is not None:
+            a = self.draw.finish()
+            lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
+            cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
+
+            if self.annotator.image is not None:
+                filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+                imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
+                if self.workingDirectory is not None:
+                    if os.path.exists(os.path.join(lbl_dir, filename)):
+                        with open(os.path.join(lbl_dir, filename), 'a') as fn:
+                            for _ in a:
+                                fn.write(_)
+                                fn.write('\n')
+                            fn.close()
+                    else:
+                        if os.path.exists(lbl_dir):
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                        else:
+                            os.mkdir(lbl_dir)
+                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                for _ in a:
+                                    fn.write(_)
+                                    fn.write('\n')
+                                fn.close()
+                    if os.path.exists(cp_img_dir):
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+                    else:
+                        os.mkdir(cp_img_dir)
+                        i = resize_img((imgdir + self.annotator.image.base))
+                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+            self.draw.clearCanvas()
+            self.files.ref = self.files.currentItem()
+            self.annotator.image = self.files.currentItem()
+            self.annotator.changeImage()
+            self.files.currentItem().setSelected(False)
+            self.getPrev(lbl_dir)
+
 
     def getPrev(self, lbl_dir):
         self.classes.save_classes(self.workingDirectory[0])
@@ -395,6 +467,7 @@ class Runnable(QRunnable, QObject):
 
     def stop(self):
         self.running = False
+        del self
 
 
 class OtherLoop(QRunnable, QObject):
@@ -408,24 +481,22 @@ class OtherLoop(QRunnable, QObject):
 
     def run(self):
         while self.running:
-            self.n.send_line_output()
-            if self.n.files.currentItem() is not None:
-                self.n.files.ref = self.n.files.currentItem()
-                self.n.annotator.image = self.n.files.currentItem()
-                self.n.annotator.changeImage()
-                self.n.files.currentItem().setSelected(False)
-            if self.n.classes.currentItem() is not None:
-                self.n.annotator.activeClass = self.n.classes.currentItem().name
-                self.n.draw.activeClass = self.n.classes.indexFromItem(self.n.classes.currentItem()).row()
-            elif self.n.classes.currentItem() is None:
-                self.n.annotator.activeClass = None
-                self.n.draw.activeClass = None
+            if self.n.files:
+                self.n.send_line_output()
+                #if self.n.files.currentItem() is not None:
+                #    if self.n.files.open:
+                 #       self.n.files.ref = self.n.files.currentItem()
+                #        self.n.annotator.image = self.n.files.currentItem()
+                #        self.n.annotator.changeImage()
+                 #       self.n.files.currentItem().setSelected(False)
+                if self.n.classes.currentItem() is not None:
+                    self.n.annotator.activeClass = self.n.classes.currentItem().name
+                    self.n.draw.activeClass = self.n.classes.indexFromItem(self.n.classes.currentItem()).row()
+                elif self.n.classes.currentItem() is None:
+                    self.n.annotator.activeClass = None
+                    self.n.draw.activeClass = None
             time.sleep(.1)
 
     def stop(self):
         self.running = False
-
-
-
-
-
+        del self

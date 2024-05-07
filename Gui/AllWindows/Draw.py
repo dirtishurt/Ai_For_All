@@ -37,14 +37,12 @@ class Draw(QWidget):
         #self.clearCanvas()
         #self.deleteAllAnnotations()
 
-    def updateSize(self, x):
-        self.x, self.y = x.width(), x.height()
-        self.resize(QSize(self.x, self.y))
-        print(self.x, self.y)
+
 
     def mousePressEvent(self, e):
         if self.mode == 'poly':
             p1 = QPoint((e.position().x()) - 9 / 1, (e.position().y()) / 1)
+            print((QPoint(e.position().x(), e.position().y())).toTuple())
             self.cords.append(p1)
             self.updateCanvas()
             time.sleep(.1)
