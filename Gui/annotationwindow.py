@@ -26,7 +26,6 @@ try:
     from Id_Recognition.project_utils import resize_img, partition_pct
 except:
     from project_utils import resize_img, partition_pct
-import pyautogui
 
 
 class MainWindow(QMainWindow):
@@ -35,7 +34,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
 
         super(MainWindow, self).__init__(parent)
-        self.screen_size = pyautogui.size()
         self.dialog = QFileDialog(caption='Set Project Directory')
         self.workingDirectory = None
         self.dialog.setFileMode(QFileDialog.FileMode.Directory)
