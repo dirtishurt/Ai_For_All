@@ -125,10 +125,80 @@
       <item>
        <widget class="Camera" name="camer_output" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>640</width>
+          <height>360</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>2560</width>
+          <height>1440</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>16</width>
+          <height>9</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>16</width>
+          <height>9</height>
+         </size>
+        </property>
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="Window">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>62</red>
+              <green>180</green>
+              <blue>137</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="Window">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>62</red>
+              <green>180</green>
+              <blue>137</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="Base">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>62</red>
+              <green>180</green>
+              <blue>137</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Window">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>62</red>
+              <green>180</green>
+              <blue>137</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
         </property>
         <property name="autoFillBackground">
          <bool>true</bool>
@@ -220,7 +290,7 @@
           </property>
          </widget>
         </item>
-        <item alignment="Qt::AlignmentFlag::AlignRight">
+        <item>
          <widget class="QLineEdit" name="confidence_percent">
           <property name="maximumSize">
            <size>

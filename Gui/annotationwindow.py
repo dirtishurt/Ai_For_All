@@ -7,7 +7,7 @@ import sys
 import time
 
 import cv2
-from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog, QWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog, QWidget, QMessageBox
 import PySide6.QtCore
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction, QKeyEvent, QColor, QPixmap
 from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize, QPoint
@@ -70,6 +70,7 @@ class MainWindow(QMainWindow):
 
         self.draw.setMode('poly')
         self.files.itemClicked.connect(self.get_selected)
+        self.ui.removeclass.clicked.connect(self.remove_class)
 
     def load_images(self):
         if self.workingDirectory:
@@ -86,6 +87,11 @@ class MainWindow(QMainWindow):
                         self.files.printfilenames()
                     file.close()
 
+    @Slot()
+    def remove_class(self):
+        self.classes.classes.remove(self.classes.currentItem().name)
+        self.classes.takeItem(self.classes.row(self.classes.currentItem()))
+        self.classes.save_classes(self.workingDirectory[0])
 
     @Slot()
     def setWorkingDirectory(self):
@@ -95,10 +101,10 @@ class MainWindow(QMainWindow):
             self.load_images()
 
         self.classes.load_classes(self.workingDirectory[0])
+
     @Slot()
     def return_to_main(self):
         self.hide()
-
 
     @Slot()
     def show_self(self):
@@ -110,7 +116,8 @@ class MainWindow(QMainWindow):
     @Slot()
     def SaveAll(self):
         self.classes.save_classes(self.workingDirectory[0])
-        #self.files.save_image_paths(self.workingDirectory[0])
+        # self.files.save_image_paths(self.workingDirectory[0])
+
     @Slot()
     def viewWorkingDirectory(self):
         if self.workingDirectory is not None:
@@ -278,6 +285,7 @@ class MainWindow(QMainWindow):
             self.annotator.changeImage()
             self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
+
     @Slot()
     def get_selected(self):
         if self.workingDirectory is not None:
@@ -322,7 +330,6 @@ class MainWindow(QMainWindow):
             self.annotator.changeImage()
             self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
-
 
     def getPrev(self, lbl_dir):
         self.classes.save_classes(self.workingDirectory[0])
@@ -481,12 +488,12 @@ class OtherLoop(QRunnable, QObject):
         while self.running:
             if self.n.files:
                 self.n.send_line_output()
-                #if self.n.files.currentItem() is not None:
+                # if self.n.files.currentItem() is not None:
                 #    if self.n.files.open:
-                 #       self.n.files.ref = self.n.files.currentItem()
+                #       self.n.files.ref = self.n.files.currentItem()
                 #        self.n.annotator.image = self.n.files.currentItem()
                 #        self.n.annotator.changeImage()
-                 #       self.n.files.currentItem().setSelected(False)
+                #       self.n.files.currentItem().setSelected(False)
                 if self.n.classes.currentItem() is not None:
                     self.n.annotator.activeClass = self.n.classes.currentItem().name
                     self.n.draw.activeClass = self.n.classes.indexFromItem(self.n.classes.currentItem()).row()

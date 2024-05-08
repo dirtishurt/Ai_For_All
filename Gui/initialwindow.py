@@ -2,7 +2,7 @@
 import sys
 import time
 
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QComboBox
 from PySide6.QtCore import Signal, Slot, QRunnable, QObject, Qt, QThreadPool
 import webbrowser
 
@@ -29,6 +29,8 @@ class MainWindow(QMainWindow):
         self.ui.confidence_slider.setMaximum(95)
         self.ui.confidence_slider.valueChanged.connect(self.confidence_value_changed)
         self.tw = train_widget.Train()
+        self.model_selector = QComboBox()
+        self.models = []
 
         self.p_text = self.ui.confidence_percent
         self.p_text.setMaxLength(2)
@@ -46,6 +48,13 @@ class MainWindow(QMainWindow):
         self.ui.menuImport_Model.actions()[0].triggered.connect(self.import_model)
         self.loaded_models = []
         self.ui.menuHelp.actions()[0].triggered.connect(self.help)
+        self.model_selector.setPlaceholderText('Select Model')
+        path = os.path.abspath('../Working_Models/base-ultralytics')
+        for i in os.listdir(path):
+            x = train_widget.Item(os.path.join(path, i), i)
+            self.models.append(x)
+            self.model_selector.addItem(x.name)
+
 
         # ALL Signals below this comment
         self.running = True
@@ -73,10 +82,6 @@ class MainWindow(QMainWindow):
     @Slot()
     def help(self):
         webbrowser.open('https://github.com/dirtishurt/Ai_For_All/blob/main/README.md')
-
-
-
-
 
     @Slot()
     def end(self):
@@ -136,7 +141,14 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def run(self):
-        self.camera.initUI()
+        self.model_selector.show()
+
+    @Slot(int)
+    def run_2(self, a):
+        if a >= 0:
+            print(self.models[self.model_selector.currentIndex()].path)
+            self.model_selector.hide()
+            self.camera.initUI(self.models[self.model_selector.currentIndex()].path)
 
     @Slot()
     def stop(self):
@@ -160,4 +172,7 @@ class OtherLoop(QRunnable, QObject):
         while self.running:
             self.n.send_line_output()
             self.n.github()
+            if self.n.model_selector.isVisible():
+                self.n.model_selector.currentIndexChanged.connect(self.n.run_2(self.n.model_selector.currentIndex()
+                                                                               ))
             time.sleep(.1)
