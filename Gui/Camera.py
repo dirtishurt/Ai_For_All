@@ -80,4 +80,4 @@ class Camera(QWidget):
         self.th.start()
 
     def exit(self):
-        self.th.stop()
+        self.th.isRunning = False
