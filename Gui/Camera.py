@@ -15,11 +15,12 @@ class Thread(QThread):
     changePixmap = pyqtSignal(QImage)
     getSize = pyqtSlot()
 
-    def __init__(self, dataset, parent):
+    def __init__(self, dataset, parent, conf):
         super().__init__()
         self.dataset = dataset
         self.parent = parent
         self.isRunning = True
+        self.conf = conf
 
     def run(self):
         exists = False
@@ -41,13 +42,11 @@ class Thread(QThread):
                                                                         Qt.AspectRatioMode.KeepAspectRatio)
                 self.changePixmap.emit(convertToQtFormat)
                 cv2.waitKey(1)
+        self.exit()
 
-    def stop(self):
-        self.isRunning = False
-        self.quit()
 
     def render(self, model, frame):
-        results = model.predict(frame, conf=.56, verbose=False)
+        results = model.predict(frame, conf=self.conf, verbose=False)
         an_frame = results[0].plot()
         return an_frame
 
@@ -56,10 +55,11 @@ class Camera(QWidget):
 
     def __init__(self, a):
         super().__init__(a)
+        self.a = a
         self.models = []
         self.model_selector = QComboBox()
         self.model = None
-
+        self.oldLabel = QLabel(a)
         self.label = QLabel(a)
         self.th = None
         self.title = 'Camera'
@@ -72,12 +72,10 @@ class Camera(QWidget):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 
-    def initUI(self, a):
-        self.th = Thread(a, self)
+    def initUI(self, a, v):
+        self.th = Thread(a, self, v)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         self.th.changePixmap.connect(self.setImage)
         self.th.start()
 
-    def exit(self):
-        self.th.isRunning = False

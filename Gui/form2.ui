@@ -942,6 +942,7 @@
    </attribute>
    <addaction name="actionBox"/>
    <addaction name="actionPolygonTool"/>
+   <addaction name="actionclassification"/>
    <addaction name="separator"/>
    <addaction name="actiondelete"/>
    <addaction name="actionUndo"/>
@@ -1194,6 +1195,24 @@
   <action name="actionToggle">
    <property name="text">
     <string>Open image Search</string>
+   </property>
+  </action>
+  <action name="actionclassification">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>classification-icon-512x512-cjfcdh0f.png</normaloff>classification-icon-512x512-cjfcdh0f.png</iconset>
+   </property>
+   <property name="text">
+    <string>classification</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
  </widget>

@@ -2,9 +2,12 @@
 import sys
 import time
 
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QComboBox
-from PySide6.QtCore import Signal, Slot, QRunnable, QObject, Qt, QThreadPool
+
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QComboBox, QSizePolicy
+from PySide6.QtCore import Signal, Slot, QRunnable, QObject, Qt, QThreadPool, QSize
+from PySide6.QtGui import QBrush, QPalette, QColor
 import webbrowser
+from Camera import Camera
 
 # Important:
 # You need to run the following command to generate the ui_form2.py file
@@ -148,11 +151,40 @@ class MainWindow(QMainWindow):
         if a >= 0:
             print(self.models[self.model_selector.currentIndex()].path)
             self.model_selector.hide()
-            self.camera.initUI(self.models[self.model_selector.currentIndex()].path)
+            self.camera.initUI(self.models[self.model_selector.currentIndex()].path, self.ui.confidence_slider.value())
 
+    # This just stops the camera by deleting it, and reinserting it.
     @Slot()
     def stop(self):
-        self.camera.exit()
+        if self.camera.th.isRunning:
+            self.camera.th.isRunning = False
+            self.ui.camer_output = Camera(self.ui.centralwidget)
+            self.ui.camer_output.setObjectName(u"camer_output")
+            sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+            sizePolicy1.setHorizontalStretch(0)
+            sizePolicy1.setVerticalStretch(0)
+            sizePolicy1.setHeightForWidth(self.ui.camer_output.sizePolicy().hasHeightForWidth())
+            self.ui.camer_output.setSizePolicy(sizePolicy1)
+            self.ui.camer_output.setMinimumSize(QSize(640, 360))
+            self.ui.camer_output.setMaximumSize(QSize(2560, 1440))
+            self.ui.camer_output.setSizeIncrement(QSize(16, 9))
+            self.ui.camer_output.setBaseSize(QSize(16, 9))
+            palette1 = QPalette()
+            brush1 = QBrush(QColor(62, 180, 137, 255))
+            brush1.setStyle(Qt.SolidPattern)
+            palette1.setBrush(QPalette.Active, QPalette.Window, brush1)
+            palette1.setBrush(QPalette.Inactive, QPalette.Window, brush1)
+            palette1.setBrush(QPalette.Disabled, QPalette.Base, brush1)
+            palette1.setBrush(QPalette.Disabled, QPalette.Window, brush1)
+            self.ui.camer_output.setPalette(palette1)
+            self.ui.camer_output.setAutoFillBackground(True)
+            self.ui.verticalLayout.insertWidget(0, self.ui.camer_output)
+            self.ui.run_button.clicked.connect(self.ui.camer_output.update)
+            self.ui.end_button.clicked.connect(self.ui.camer_output.close)
+            self.camera = self.ui.camer_output
+
+
+
 
     @Slot()
     def confidence_value_changed(self, value):

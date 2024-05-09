@@ -169,6 +169,8 @@ class MainWindow(QMainWindow):
                         self.draw.setMode('box')
                     if i.text() == 'PolygonTool':
                         self.draw.setMode('poly')
+                    if i.text() == 'classification':
+                        self.draw.setMode('classification')
                     self.active.toggle()
                 self.active = i
             if self.active.text() == 'delete':

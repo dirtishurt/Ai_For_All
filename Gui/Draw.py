@@ -184,4 +184,10 @@ class Draw(QWidget):
         else:
             self.finished_annots = []
             self.prev_anns = []
-            return f'{self.activeClass}'
+            if self.mode == 'classification':
+                if self.activeClass:
+                    return f'{self.activeClass}'
+                else:
+                    return ''
+            else:
+                return ''
