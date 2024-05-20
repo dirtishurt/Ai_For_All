@@ -33,6 +33,7 @@ class Draw(QWidget):
 
     def setMode(self, mode):
         self.mode = mode
+        print(self.activeClass)
         # self.clearCanvas()
         # self.deleteAllAnnotations()
 
@@ -184,4 +185,10 @@ class Draw(QWidget):
         else:
             self.finished_annots = []
             self.prev_anns = []
-            return f'{self.activeClass}'
+            if self.mode == 'classification':
+                if self.activeClass:
+                    return f'{self.activeClass}'
+                else:
+                    return ''
+            else:
+                return ''

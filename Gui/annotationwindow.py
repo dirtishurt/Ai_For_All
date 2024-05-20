@@ -7,7 +7,7 @@ import sys
 import time
 
 import cv2
-from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog, QWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QListView, QWidgetAction, QFileDialog, QWidget, QMessageBox
 import PySide6.QtCore
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QAction, QKeyEvent, QColor, QPixmap
 from PySide6.QtCore import QThread, QObject, QRunnable, QThreadPool, Signal, Slot, Qt, QEvent, QSize, QPoint
@@ -21,12 +21,10 @@ except:
 #     pyside6-uic form2.ui -o ui_form2.py, or
 #     pyside2-uic form2.ui -o ui_form2.py
 from ui_form2 import Ui_MainWindow as ui
-
 try:
     from Id_Recognition.project_utils import resize_img, partition_pct
 except:
     from project_utils import resize_img, partition_pct
-import pyautogui
 
 
 class MainWindow(QMainWindow):
@@ -35,7 +33,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
 
         super(MainWindow, self).__init__(parent)
-        self.screen_size = pyautogui.size()
         self.dialog = QFileDialog(caption='Set Project Directory')
         self.workingDirectory = None
         self.dialog.setFileMode(QFileDialog.FileMode.Directory)
@@ -72,6 +69,10 @@ class MainWindow(QMainWindow):
 
         self.draw.setMode('poly')
         self.files.itemClicked.connect(self.get_selected)
+        self.ui.removeclass.clicked.connect(self.remove_class)
+        self.ui.menuTest.actions()[0].triggered.connect(self.parent().open_image_search)
+
+
 
     def load_images(self):
         if self.workingDirectory:
@@ -89,30 +90,46 @@ class MainWindow(QMainWindow):
                     file.close()
 
 
+
+
+
+
+    @Slot()
+    def remove_class(self):
+        self.classes.classes.remove(self.classes.currentItem().name)
+        self.classes.takeItem(self.classes.row(self.classes.currentItem()))
+        self.classes.save_classes(self.workingDirectory[0])
+
     @Slot()
     def setWorkingDirectory(self):
         self.opening = True
         if self.dialog.exec():
             self.workingDirectory = self.dialog.selectedFiles()
             self.load_images()
-
         self.classes.load_classes(self.workingDirectory[0])
+
     @Slot()
     def return_to_main(self):
+        self.parent().show()
         self.hide()
+
+    def closeEvent(self, event: PySide6.QtGui.QCloseEvent) -> None:
+        self.parent().show()
 
 
     @Slot()
     def show_self(self):
+        self.parent().hide()
         if self.workingDirectory:
             self.classes.load_classes(self.workingDirectory[0])
             self.load_images()
-        self.showFullScreen()
+        self.show()
 
     @Slot()
     def SaveAll(self):
         self.classes.save_classes(self.workingDirectory[0])
-        #self.files.save_image_paths(self.workingDirectory[0])
+        # self.files.save_image_paths(self.workingDirectory[0])
+
     @Slot()
     def viewWorkingDirectory(self):
         if self.workingDirectory is not None:
@@ -164,6 +181,8 @@ class MainWindow(QMainWindow):
                         self.draw.setMode('box')
                     if i.text() == 'PolygonTool':
                         self.draw.setMode('poly')
+                    if i.text() == 'classification':
+                        self.draw.setMode('classification')
                     self.active.toggle()
                 self.active = i
             if self.active.text() == 'delete':
@@ -280,6 +299,7 @@ class MainWindow(QMainWindow):
             self.annotator.changeImage()
             self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
+
     @Slot()
     def get_selected(self):
         if self.workingDirectory is not None:
@@ -324,7 +344,6 @@ class MainWindow(QMainWindow):
             self.annotator.changeImage()
             self.files.currentItem().setSelected(False)
             self.getPrev(lbl_dir)
-
 
     def getPrev(self, lbl_dir):
         self.classes.save_classes(self.workingDirectory[0])
@@ -483,12 +502,12 @@ class OtherLoop(QRunnable, QObject):
         while self.running:
             if self.n.files:
                 self.n.send_line_output()
-                #if self.n.files.currentItem() is not None:
+                # if self.n.files.currentItem() is not None:
                 #    if self.n.files.open:
-                 #       self.n.files.ref = self.n.files.currentItem()
+                #       self.n.files.ref = self.n.files.currentItem()
                 #        self.n.annotator.image = self.n.files.currentItem()
                 #        self.n.annotator.changeImage()
-                 #       self.n.files.currentItem().setSelected(False)
+                #       self.n.files.currentItem().setSelected(False)
                 if self.n.classes.currentItem() is not None:
                     self.n.annotator.activeClass = self.n.classes.currentItem().name
                     self.n.draw.activeClass = self.n.classes.indexFromItem(self.n.classes.currentItem()).row()

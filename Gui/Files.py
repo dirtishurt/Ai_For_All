@@ -99,3 +99,4 @@ class FileItem(QListWidgetItem):
         super().__init__(name, listview)
         self.name = name
         self.base = baseName
+        self.setText(self.base)

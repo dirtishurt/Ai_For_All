@@ -1,23 +1,21 @@
-# Table of Contents:
-<!-- TOC -->
+# Table Of Contents
+
 * [Application Based Issues](#application-based-issues)
   * [How to use the Program](#how-to-use-the-program)
     * [Adding a Label to an Image](#adding-a-label-to-an-image)
     * [Creating A Dataset](#creating-a-dataset)
     * [Training a model](#training-a-model)
-      * [Adjusting Settings](#adjusting-settings)
-* [Training Issues:](#training-issues)
-<!-- TOC -->
+      * [Adjusting Settings and Selecting a model](#adjusting-settings-and-selecting-a-model)
+        * [Models](#models)
+        * [Datasets](#datasets)
+* [Training Issues](#training-issues)
+      * [Using a CPU](#using-a-cpu-)
+  * [Closing Notes](#closing-notes)
 
 
-
-
-
-
-
+  
 # Application Based Issues
 
-**Requires Python 3.11 or Earlier if you are not using a GPU**
 
 <p>
 If nothing is working at all, you probably forgot to set a project directory. To do that click 'Set Project Directory'
@@ -32,6 +30,13 @@ to hit 'Create Model &rAarr; Open Annotation Window'. From there you can click '
 options. Note: hitting 'Select Folder' will remove all currently loaded files, this is intentional, it will not
 remove them from the dataset, to reload those images just reload the directory.
 </p>
+<p>Hitting Run will prompt you to select a model, there are some base models included by default, you can
+find more  <a href=https://docs.ultralytics.com/models/yolov8/#supported-tasks-and-modes>here</a>. You do need
+a webcam of sorts, but in the future I will add a mode that will be able to get predictions based on videos
+and images, which will then be saved to your project directory.</p>
+<p>Hitting End, will stop the camera</p>
+<P>IMPORTANT: Use the slider or enter a value into the text box labeled confidence to adjust the accuracy threshold
+for the model.</P>
 
 ### Adding a Label to an Image
 
@@ -60,8 +65,14 @@ safely close the Annotation Window.</p>
   * The amount of training iterations, i.e. the more of these, generally the better the accuracy.
 * Patience
   * The maximum amount of epochs without improvement, setting this value to 0 disables this.
+* There are more settings not listed here, that are not implemented due to time, but I will implement an advanced settings menu at some point
+
+***
 
 ##### Models
+<p>Select one of these during training to ensure that it's configured for the task you want
+</p>
+
 * yolov8n
   * The quickest, works only with bounding box detection
 * yolov8n-cls
@@ -69,8 +80,15 @@ safely close the Annotation Window.</p>
   * By default, if you have no annotations drawn when changing images, it will just write the currently selected class to the image's label file
 * yolov8n-seg
   * A more accurate model, only truly compatible with the polygon tool, takes longer to train than yolov8n
-* yolov8s-seg
-  * Like the previous one, just better. Takes even longer to train
+* anymodel(s,m,l,x)
+  * In order, these are more accurate but require exponentially more processing power for each iteration you increase
+  * By default, these are not included in the repo due to GitHub's file size limit, I plan on implementing a script at some point to install these
+
+***
+
+##### Datasets
+<p>This is where your data comes in. Currently, you just have to check the yaml to see the info it contains, but
+I am working on adding better naming.</p>
 
 ***
 # Training Issues
@@ -92,6 +110,22 @@ in some cases the GPU will not run if it is not. See the figure below</p>
         alt="Set High Performance Mode in Windows"
     >
 </figure>
+
+***
+
+#### Using a CPU 
+<p>You need a decent one, simply put, it takes a lot longer and requires more ram (since you no longer have VRAM).</p>
+<P> You <i>should</i> be able to run the training using 16GB of ram, however, even when using a GPU, I recommend 32GB.</P>
+
+***
+
+## Closing Notes
+* Ideally set up Conda, so you can use a GPU(if it's supported)
+* Use an SSD ... <i>pretty please</i> ... your computer will thank you
+* Ideally have over 16GB of RAM
+
+***
+_So Long, and Thanks for All the Fish_
 
 
 

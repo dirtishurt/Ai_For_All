@@ -137,7 +137,7 @@ class workerThread(QThread):
 
         else:
             print('WARNING CUDA COMPATIBLE GPU NOT DETECTED, TRAINING WILL TAKE LONGER...')
-            self.model.train(data=self.parent.dataset.path, device='cpu', patience=self.parent.patience,
+            self.model.train(data=self.parent.dataset.path, patience=self.parent.patience,
                              epochs=self.parent.epochs,
                              imgsz=640, project=export_path, verbose=False)
 

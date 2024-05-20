@@ -1,7 +1,7 @@
 import os
 
 from PySide6.QtWidgets import (QWidget, QLabel, QApplication, QListWidget, QWidgetAction, QFileDialog, QVBoxLayout,
-                               QPushButton, QGroupBox, QListWidgetItem)
+                               QPushButton, QGroupBox, QListWidgetItem, QHBoxLayout)
 from PySide6.QtCore import QThread, Qt, Signal, Slot, QObject
 from PySide6.QtGui import QImage, QPixmap, QColor
 
@@ -19,8 +19,9 @@ class Classes(QListWidget):
         self.setAcceptDrops(False)
         self.setSortingEnabled(False)
         self.initUI()
+        self.last_key = None
 
-        #self.th = Thread(self)
+        # self.th = Thread(self)
 
     def add_classes(self):
         self.clear()
@@ -33,6 +34,10 @@ class Classes(QListWidget):
                 i = 0
         for i in range(len(self.classes)):
             self.addItem(ClassButton((self.classes[i]), listview=self))
+
+
+    def keyPressEvent(self, event):
+        self.last_key = event.key()
 
     def initUI(self):
         self.add_classes()
@@ -62,14 +67,10 @@ class Classes(QListWidget):
             self.add_classes()
 
 
-
-
 class ClassButton(QListWidgetItem):
 
     def __init__(self, name: str, listview):
         super().__init__(name, listview)
         self.name = name
-
-
 
 
