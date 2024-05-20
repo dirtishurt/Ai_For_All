@@ -80,14 +80,17 @@ class MainWindow(QMainWindow):
                 path = os.path.join(self.workingDirectory[0], 'image_paths.txt')
                 if os.path.exists(path):
                     file = open(path, 'r')
-                    c = []
-                    for line in file:
-                        if line != '':
-                            c.append(line.removesuffix('\n'))
-                    for i in c:
-                        self.files.filenames = [i]
-                        self.files.printfilenames()
-                    file.close()
+                    if file.read() == '':
+                        pass
+                    else:
+                        c = []
+                        for line in file:
+                            if line != '':
+                                c.append(line.removesuffix('\n'))
+                        for i in c:
+                            self.files.filenames = [i]
+                            self.files.printfilenames()
+                        file.close()
 
 
 

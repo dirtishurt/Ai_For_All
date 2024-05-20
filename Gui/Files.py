@@ -65,7 +65,11 @@ class Files(QListWidget):
     def printfilenames(self):
         for i in os.listdir(self.filenames[0]):
             path = os.path.join(self.filenames[0], i)
-            self.recursive_add(path)
+            if os.path.isdir(path):
+                self.recursive_add(path)
+            else:
+                newitem = FileItem(path, self, i)
+                self.addItem(newitem)
 
     def recursive_add(self, path):
         if os.path.isdir(path):
@@ -76,6 +80,7 @@ class Files(QListWidget):
                 else:
                     newitem = FileItem(f_path, self, i)
                     self.addItem(newitem)
+
 
     def see_clicked(self, f):
         if self.ref is not None:
