@@ -400,8 +400,8 @@ class MainWindow(QMainWindow):
                 if set_f == 1:
                     f = i
                     set_f = 0
-                x = int(float(i[0]) * 640) - 9
-                y = int(float(i[1]) * 640)
+                x = int(float(i[0]) * 640) - 8
+                y = int(float(i[1]) * 640) - 2
                 points.append(QPoint(x, y))
                 if i == f:
                     f_c += 1

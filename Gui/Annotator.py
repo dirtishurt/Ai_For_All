@@ -16,6 +16,7 @@ class Annotator(QWidget):
         self.activeClass = None
         self.image = None
         self.lastImage = self.image
+        self.label.setScaledContents(True)
 
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImageInPlace(image))
@@ -26,7 +27,7 @@ class Annotator(QWidget):
 
     def changeImage(self):
         if self.image.name != self.lastImage:
-            p = QImage(self.image.name).scaled(640, 640)
+            p = QImage(self.image.name)
             self.setImage(p)
             self.lastImage = self.image.name
 
@@ -52,6 +53,7 @@ class Annotator(QWidget):
         self.activeClass = None
         self.image = None
         self.lastImage = self.image
+        self.label.setScaledContents(True)
 
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImageInPlace(image))
@@ -61,7 +63,12 @@ class Annotator(QWidget):
         self.setLayout(self.layout)
 
     def changeImage(self):
-        if self.image.name != self.lastImage:
-            p = QImage(self.image.name).scaled(640, 640)
+        if self.lastImage is not None:
+            if self.image.name != self.lastImage:
+                p = QImage(self.image.name)
+                self.setImage(p)
+                self.lastImage = self.image.name
+        else:
+            p = QImage(self.image.name)
             self.setImage(p)
             self.lastImage = self.image.name

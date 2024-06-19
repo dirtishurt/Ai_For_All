@@ -6,6 +6,7 @@ class Display(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.label = QLabel(parent)
+        self.label.setScaledContents(True)
         self.layout = QGridLayout()
         self.image = None
         self.lastImage = None
@@ -16,7 +17,7 @@ class Display(QWidget):
     def changeImage(self):
         self.image = self.parent.files.currentItem()
         if self.image.name != self.lastImage:
-            p = QImage(self.image.name).scaled(640, 640)
+            p = QImage(self.image.name)
             self.setImage(p)
             self.lastImage = self.image.name
 

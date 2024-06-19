@@ -39,20 +39,20 @@ class Draw(QWidget):
 
     def mousePressEvent(self, e):
         if self.mode == 'poly':
-            p1 = QPoint((e.position().x()) - 9 / 1, (e.position().y()) / 1)
+            p1 = QPoint((e.position().x()) - 8 / 1, (e.position().y()) -2/ 1)
             print((QPoint(e.position().x(), e.position().y())).toTuple())
             self.cords.append(p1)
             self.updateCanvas()
             time.sleep(.1)
         elif self.mode == 'box':
-            p1 = QPoint((e.position().x()) - 9 / 1, (e.position().y()) / 1)
+            p1 = QPoint((e.position().x()) - 8 / 1, (e.position().y()) - 2 / 1)
             self.cords.append(p1)
 
     def get_box_points(self, orgin: QPoint, mouse_pos):
         x_orgin = orgin.x()
         y_orgin = orgin.y()
-        x_mouse = mouse_pos.x()
-        y_mouse = mouse_pos.y()
+        x_mouse = mouse_pos.x() - 8
+        y_mouse = mouse_pos.y() - 2
         b1 = orgin
         b2 = QPoint(x_mouse, y_orgin)
         b3 = QPoint(x_mouse, y_mouse)
@@ -157,8 +157,8 @@ class Draw(QWidget):
             lst_str = f'{self.activeClass} '
             self.prev_anns.append(self.cords)
             for i in self.cords:
-                lst_str += f'{((i.x() + 9) / 640)} '
-                lst_str += f'{(i.y() / 640)} '
+                lst_str += f'{((i.x() + 8) / 640)} '
+                lst_str += f'{(i.y() +2 / 640)} '
             self.finished_annots.append(lst_str)
             self.cords = []
 
@@ -172,11 +172,11 @@ class Draw(QWidget):
             else:
                 lst_str = ''
             for i in self.cords:
-                lst_str += f'{((i.x() + 9) / 640)} '
-                lst_str += f'{(i.y() / 640)} '
+                lst_str += f'{((i.x() + 8) / 640)} '
+                lst_str += f'{(i.y() +2 / 640)} '
             if self.mode == 'poly':
-                lst_str += f'{(self.cords[0].x() + 9) / 640} '
-                lst_str += f'{self.cords[0].y() / 640} '
+                lst_str += f'{(self.cords[0].x() + 8) / 640} '
+                lst_str += f'{self.cords[0].y() + 2/ 640} '
             self.finished_annots.append(lst_str)
             a = self.finished_annots
             self.finished_annots = []
