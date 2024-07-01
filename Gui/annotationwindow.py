@@ -483,9 +483,10 @@ class Runnable(QRunnable, QObject):
     def run(self):
         while self.running:
             for i in self.n:
-                if i.text() != '':
-                    self.getWidgets.emit(i)
-                    time.sleep(.01)
+                if i is not None:
+                    if i.text() != '':
+                        self.getWidgets.emit(i)
+                        time.sleep(.01)
 
     def stop(self):
         self.running = False

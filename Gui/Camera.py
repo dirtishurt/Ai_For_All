@@ -20,13 +20,12 @@ class Thread(QThread):
         self.parent = parent
         self.isRunning = True
         self.conf = conf
+        if not torch.cuda.is_available():
+            print("No CUDA capable GPU available, performance may be poor.")
         time.sleep(.2)
 
     def run(self):
         exists = False
-        if not torch.cuda.is_available():
-            print("No CUDA capable GPU available, performance may be poor.")
-
         model = YOLO(os.path.abspath(self.dataset))
         cap = cv2.VideoCapture(0)
         while self.isRunning:
@@ -39,7 +38,7 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, w,
                                            h, bytesPerLine,
                                            QImage.Format_RGB888).scaled(self.parent.size(),
-                                                                        Qt.AspectRatioMode.KeepAspectRatio)
+                                                                     Qt.AspectRatioMode.KeepAspectRatio)
                 self.changePixmap.emit(convertToQtFormat)
                 cv2.waitKey(1)
         self.exit()
@@ -55,7 +54,6 @@ class Camera(QWidget):
 
     def __init__(self, a):
         super().__init__(a)
-        self.a = a
         self.models = []
         self.model_selector = QComboBox()
         self.model = None

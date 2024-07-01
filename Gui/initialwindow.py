@@ -1,4 +1,5 @@
 # This Python file uses the following encoding: utf-8
+import shutil
 import sys
 import time
 
@@ -52,11 +53,6 @@ class MainWindow(QMainWindow):
         self.loaded_models = []
         self.ui.menuHelp.actions()[0].triggered.connect(self.help)
         self.model_selector.setPlaceholderText('Select Model')
-        path = os.path.abspath('../Working_Models/base-ultralytics')
-        for i in os.listdir(path):
-            x = train_widget.Item(os.path.join(path, i), i)
-            self.models.append(x)
-            self.model_selector.addItem(x.name)
 
 
         # ALL Signals below this comment
@@ -96,6 +92,7 @@ class MainWindow(QMainWindow):
         self.tw.show()
         self.tw.add_datasets(self.workingDirectory[0])
 
+# The image search feature is currently not supported
     @Slot()
     def open_image_search(self):
         ann = self.findChildren(QMainWindow, 'MainWindow')[0]
@@ -111,7 +108,7 @@ class MainWindow(QMainWindow):
         dl.setNameFilter('*.pt')
         if dl.exec():
             s_f = dl.selectedFiles()
-            self.loaded_models.append(s_f)
+            shutil.copyfile('./Working_Models', s_f[0])
             print(s_f)
 
     def close(self):
@@ -154,14 +151,22 @@ class MainWindow(QMainWindow):
     @Slot()
     def run(self):
         self.model_selector.show()
+        path = os.path.abspath('../Working_Models/base-ultralytics')
+        self.models.clear()
+        for i in os.listdir(path):
+            x = train_widget.Item(os.path.join(path, i), i)
+            self.models.append(x)
+            self.model_selector.addItem(x.name)
+
 
     @Slot(int)
     def run_2(self, a):
         if a >= 0:
             print(self.models[self.model_selector.currentIndex()].path)
-            self.model_selector.hide()
             self.camera.initUI(self.models[self.model_selector.currentIndex()].path,
                                self.ui.confidence_slider)
+
+
 
     # This just stops the camera by deleting it, and reinserting it.
     @Slot()
