@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QGridL
 from PySide6.QtCore import QThread, Qt, Signal, Slot
 from PySide6.QtGui import QImage, QPixmap, QColor, QPainter
 
+
 class Display(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -23,4 +24,3 @@ class Display(QWidget):
 
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImageInPlace(image))
-

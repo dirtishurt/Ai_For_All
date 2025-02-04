@@ -19,9 +19,8 @@ class Draw(QWidget):
         self.label.setPixmap(self.canvas)
         self.title = 'Annotator'
         self.activeClass = None
-        self.mode = 'Poly'
+        self.mode = 'Box'
         self.layout = QGridLayout()
-
         self.initUI()
         self.click = 0
         self.cords = []
@@ -158,11 +157,12 @@ class Draw(QWidget):
             self.prev_anns.append(self.cords)
             for i in self.cords:
                 lst_str += f'{((i.x() + 8) / 640)} '
-                lst_str += f'{(i.y() +2 / 640)} '
+                lst_str += f'{((i.y() +2 )/ 640)} '
             self.finished_annots.append(lst_str)
             self.cords = []
 
     def finish(self):
+
         if not self.cords:
             self.cords = self.full_cords
         self.full_cords = []
@@ -173,10 +173,11 @@ class Draw(QWidget):
                 lst_str = ''
             for i in self.cords:
                 lst_str += f'{((i.x() + 8) / 640)} '
-                lst_str += f'{(i.y() +2 / 640)} '
+                lst_str += f'{((i.y() + 2) / 640)} '
             if self.mode == 'poly':
                 lst_str += f'{(self.cords[0].x() + 8) / 640} '
-                lst_str += f'{self.cords[0].y() + 2/ 640} '
+                lst_str += f'{(self.cords[0].y() + 2)/ 640} '
+            print(lst_str)
             self.finished_annots.append(lst_str)
             a = self.finished_annots
             self.finished_annots = []
