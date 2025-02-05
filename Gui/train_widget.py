@@ -40,6 +40,7 @@ class Train(QWidget):
             self.settings.runner.unpause()
 
     def add_datasets(self, directory):
+        self.dataset_list.clear()
         for i in os.listdir(directory):
             if i[0:7] == 'dataset':
                 for z in os.listdir(os.path.join(directory, i)):

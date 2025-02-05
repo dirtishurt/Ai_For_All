@@ -8,9 +8,10 @@ from PySide6.QtGui import QImage, QPixmap, QColor, QDropEvent
 
 class Files(QListWidget):
     file_selected = Signal()
+
     def __init__(self, window):
         super().__init__(window)
-
+        self.setFirstItem = 0
         self.label = QLabel(window)
         self.th = None
         self.title = 'Files'
@@ -71,8 +72,8 @@ class Files(QListWidget):
                 newitem = FileItem(path, self, i)
                 self.addItem(newitem)
 
-    def recursive_add(self, path):
-        if os.path.isdir(path):
+    def recursive_add(self, path, ignore=False):
+        if os.path.isdir(path) or ignore:
             for i in os.listdir(path):
                 f_path = os.path.join(path, i)
                 if os.path.isdir(f_path):
@@ -80,7 +81,10 @@ class Files(QListWidget):
                 else:
                     newitem = FileItem(f_path, self, i)
                     self.addItem(newitem)
-
+                    if self.setFirstItem == 0:
+                        self.setCurrentItem(newitem)
+                        self.currentItem().setSelected(True)
+                        self.setFirstItem = 1
 
     def see_clicked(self, f):
         if self.ref is not None:

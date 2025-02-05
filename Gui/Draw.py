@@ -8,6 +8,7 @@ from PySide6.QtGui import QImage, QPixmap, QColor, QPainter
 class Draw(QWidget):
     def __init__(self, a):
         super().__init__(a)
+        self.bthickness = 10
         self.last_y = None
         self.last_x = None
         self.window = a
@@ -18,6 +19,7 @@ class Draw(QWidget):
         self.canvas.fill(QColor(255, 255, 255, 0))
         self.label.setPixmap(self.canvas)
         self.title = 'Annotator'
+
         self.activeClass = None
         self.mode = 'Box'
         self.layout = QGridLayout()
@@ -38,13 +40,17 @@ class Draw(QWidget):
 
     def mousePressEvent(self, e):
         if self.mode == 'poly':
-            p1 = QPoint((e.position().x()) - 8 / 1, (e.position().y()) -2/ 1)
+            x = (e.position().x()) - 8 / 1
+            y = (e.position().y()) - 2 / 1
+            p1 = QPoint(x, y)
             print((QPoint(e.position().x(), e.position().y())).toTuple())
             self.cords.append(p1)
             self.updateCanvas()
             time.sleep(.1)
         elif self.mode == 'box':
-            p1 = QPoint((e.position().x()) - 8 / 1, (e.position().y()) - 2 / 1)
+            x = (e.position().x()) - 8 / 1
+            y = (e.position().y()) - 2 / 1
+            p1 = QPoint(x, y)
             self.cords.append(p1)
 
     def get_box_points(self, orgin: QPoint, mouse_pos):
@@ -80,7 +86,8 @@ class Draw(QWidget):
         if self.cords or self.prev_anns:
             canvas = self.label.pixmap()
             painter = QPainter(canvas)
-            painter.pen().setWidth(3)
+            painter.pen().setWidth(self.bthickness)
+            painter.pen().setColor(QColor('Red'))
             if self.cords:
                 painter.drawPolyline(self.cords)
             if self.prev_anns:
@@ -156,8 +163,10 @@ class Draw(QWidget):
             lst_str = f'{self.activeClass} '
             self.prev_anns.append(self.cords)
             for i in self.cords:
-                lst_str += f'{((i.x() + 8) / 640)} '
-                lst_str += f'{((i.y() +2 )/ 640)} '
+                x = ((i.x() + 8) / 640)
+                y = ((i.y() + 2) / 640)
+                lst_str += f'{x} '
+                lst_str += f'{y} '
             self.finished_annots.append(lst_str)
             self.cords = []
 
@@ -169,20 +178,43 @@ class Draw(QWidget):
         if self.cords:
             if self.activeClass is not None:
                 lst_str = f'{self.activeClass} '
+                for i in self.cords:
+                    x = ((i.x() + 8) / 640)
+                    y = ((i.y() + 2) / 640)
+                    print(x)
+                    print(y)
+                    if x < 0:
+                        x = 0
+                    if x > 1:
+                        x = 1
+                    if y < 0:
+                        y = 0
+                    if y > 1:
+                        y = 1
+                    lst_str += f'{x} '
+                    lst_str += f'{y} '
+                if self.mode == 'poly':
+                    x = (self.cords[0].x() + 8) / 640
+                    y = (self.cords[0].y() + 2) / 640
+                    if x < 0:
+                        x = 0
+                    if x > 1:
+                        x = 1
+                    if y < 0:
+                        y = 0
+                    if y > 1:
+                        y = 1
+                    lst_str += f'{x} '
+                    lst_str += f'{y} '
+                print(lst_str)
+                self.finished_annots.append(lst_str)
+                a = self.finished_annots
+                self.finished_annots = []
+                self.prev_anns = []
+                return a
             else:
-                lst_str = ''
-            for i in self.cords:
-                lst_str += f'{((i.x() + 8) / 640)} '
-                lst_str += f'{((i.y() + 2) / 640)} '
-            if self.mode == 'poly':
-                lst_str += f'{(self.cords[0].x() + 8) / 640} '
-                lst_str += f'{(self.cords[0].y() + 2)/ 640} '
-            print(lst_str)
-            self.finished_annots.append(lst_str)
-            a = self.finished_annots
-            self.finished_annots = []
-            self.prev_anns = []
-            return a
+                return -1
+
         else:
             self.finished_annots = []
             self.prev_anns = []
@@ -190,6 +222,8 @@ class Draw(QWidget):
                 if self.activeClass:
                     return f'{self.activeClass}'
                 else:
-                    return ''
+                    # return a defualt class of zero in case the user has no classes defined
+                    # I can't recall if YOLO automatically takes care of this
+                    return '0'
             else:
                 return ''

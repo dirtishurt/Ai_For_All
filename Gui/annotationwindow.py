@@ -21,10 +21,7 @@ except:
 #     pyside6-uic form2.ui -o ui_form2.py, or
 #     pyside2-uic form2.ui -o ui_form2.py
 from ui_form2 import Ui_MainWindow as ui
-try:
-    from Id_Recognition.project_utils import resize_img, partition_pct
-except:
-    from project_utils import resize_img, partition_pct
+from project_utils import resize_img, partition_pct
 
 
 class MainWindow(QMainWindow):
@@ -33,6 +30,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
 
         super(MainWindow, self).__init__(parent)
+        self.opening = None
         self.dialog = QFileDialog(caption='Set Project Directory')
         self.workingDirectory = None
         self.dialog.setFileMode(QFileDialog.FileMode.Directory)
@@ -72,30 +70,21 @@ class MainWindow(QMainWindow):
         self.ui.removeclass.clicked.connect(self.remove_class)
         self.ui.menuTest.actions()[0].triggered.connect(self.parent().open_image_search)
 
-
-
     def load_images(self):
         if self.workingDirectory:
             if os.path.exists(os.path.join(self.workingDirectory[0], 'image_paths.txt')):
-                path = os.path.join(self.workingDirectory[0], 'image_paths.txt')
-                if os.path.exists(path):
-                    file = open(path, 'r')
-                    if file.read() == '':
-                        pass
+                file = open(os.path.join(self.workingDirectory[0], 'image_paths.txt'), 'r')
+                for line in file:
+                    if (line[len(line) - 3:]) == '\n':
+                        self.files.recursive_add(line[:len(line) - 2])
                     else:
-                        c = []
-                        for line in file:
-                            if line != '':
-                                c.append(line.removesuffix('\n'))
-                        for i in c:
-                            self.files.filenames = [i]
-                            self.files.printfilenames()
-                        file.close()
-
-
-
-
-
+                        self.files.recursive_add(line)
+                self.files.ref = self.files.currentItem()
+                self.annotator.image = self.files.currentItem()
+                self.annotator.changeImage()
+                self.files.currentItem().setSelected(True)
+                self.get_selected()
+                file.close()
 
     @Slot()
     def remove_class(self):
@@ -109,7 +98,9 @@ class MainWindow(QMainWindow):
         if self.dialog.exec():
             self.workingDirectory = self.dialog.selectedFiles()
             self.load_images()
-        self.classes.load_classes(self.workingDirectory[0])
+            self.classes.load_classes(self.workingDirectory[0])
+            self.opening = False
+
 
     @Slot()
     def return_to_main(self):
@@ -118,7 +109,6 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: PySide6.QtGui.QCloseEvent) -> None:
         self.parent().show()
-
 
     @Slot()
     def show_self(self):
@@ -217,37 +207,37 @@ class MainWindow(QMainWindow):
             lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
             cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
 
-            if self.annotator.image is not None:
-                filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
-                imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
-                if self.workingDirectory is not None:
-                    if os.path.exists(os.path.join(lbl_dir, filename)):
-                        with open(os.path.join(lbl_dir, filename), 'a') as fn:
-                            for _ in a:
-                                fn.write(_)
-                                fn.write('\n')
-                            fn.close()
-                    else:
-                        if os.path.exists(lbl_dir):
-                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
+            if self.annotator.image is not None and self.draw.cords and a!=-1:
+                    filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
+                    imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
+                    if self.workingDirectory is not None:
+                        if os.path.exists(os.path.join(lbl_dir, filename)):
+                            with open(os.path.join(lbl_dir, filename), 'a') as fn:
                                 for _ in a:
                                     fn.write(_)
                                     fn.write('\n')
                                 fn.close()
                         else:
-                            os.mkdir(lbl_dir)
-                            with open(os.path.join(lbl_dir, filename), 'x') as fn:
-                                for _ in a:
-                                    fn.write(_)
-                                    fn.write('\n')
-                                fn.close()
-                    if os.path.exists(cp_img_dir):
-                        i = resize_img((imgdir + self.annotator.image.base))
-                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
-                    else:
-                        os.mkdir(cp_img_dir)
-                        i = resize_img((imgdir + self.annotator.image.base))
-                        cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+                            if os.path.exists(lbl_dir):
+                                with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                    for _ in a:
+                                        fn.write(_)
+                                        fn.write('\n')
+                                    fn.close()
+                            else:
+                                os.mkdir(lbl_dir)
+                                with open(os.path.join(lbl_dir, filename), 'x') as fn:
+                                    for _ in a:
+                                        fn.write(_)
+                                        fn.write('\n')
+                                    fn.close()
+                        if os.path.exists(cp_img_dir):
+                            i = resize_img((imgdir + self.annotator.image.base))
+                            cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
+                        else:
+                            os.mkdir(cp_img_dir)
+                            i = resize_img((imgdir + self.annotator.image.base))
+                            cv2.imwrite(f'{cp_img_dir}/{self.annotator.image.base}', i)
             self.draw.clearCanvas()
             self.files.prev()
             self.files.ref = self.files.currentItem()
@@ -264,7 +254,7 @@ class MainWindow(QMainWindow):
             lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
             cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
 
-            if self.annotator.image is not None:
+            if self.annotator.image is not None and self.draw.cords and a!= -1:
                 filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
                 imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
                 if self.workingDirectory is not None:
@@ -310,7 +300,7 @@ class MainWindow(QMainWindow):
             lbl_dir = os.path.join(self.workingDirectory[0], 'labels')
             cp_img_dir = os.path.join(self.workingDirectory[0], 'images')
 
-            if self.annotator.image is not None:
+            if self.annotator.image is not None and self.draw.cords and a!= -1:
                 filename = self.annotator.image.base[:len(self.annotator.image.base) - 4] + '.txt'
                 imgdir = self.annotator.image.name[:len(self.annotator.image.name) - len(self.annotator.image.base)]
                 if self.workingDirectory is not None:
@@ -486,12 +476,7 @@ class Runnable(QRunnable, QObject):
                 if i is not None:
                     if i.text() != '':
                         self.getWidgets.emit(i)
-                        time.sleep(.01)
-
-    def stop(self):
-        self.running = False
-        del self
-
+            time.sleep(.01)
 
 class OtherLoop(QRunnable, QObject):
     loop = Signal()
@@ -520,6 +505,4 @@ class OtherLoop(QRunnable, QObject):
                     self.n.draw.activeClass = None
             time.sleep(.1)
 
-    def stop(self):
-        self.running = False
-        del self
+

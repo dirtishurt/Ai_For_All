@@ -19,7 +19,14 @@ if __name__ == '__main__':
     annWindow.runner.getWidgets.connect(annWindow.getActive)
     annWindow.hide()
     #os.system('.\\nircmd.exe setdisplay 1024 768 32')
-    sys.exit(app.exec())
+    app.exec()
+
+    if app.quitOnLastWindowClosed():
+        annWindow.runner.running = False
+        annWindow.runner2.running = False
+        initial.runner.running = False
+
+        sys.exit()
 
 
 

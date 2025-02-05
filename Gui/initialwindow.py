@@ -79,6 +79,9 @@ class MainWindow(QMainWindow):
         self.tw.workingDirectory = self.workingDirectory[0]
         print(ann.workingDirectory)
 
+
+
+
     @Slot()
     def help(self):
         webbrowser.open('https://github.com/dirtishurt/Ai_For_All/blob/main/README.md')
@@ -90,6 +93,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def open_training_dialog(self):
         self.tw.show()
+        self.tw
         self.tw.add_datasets(self.workingDirectory[0])
 
 # The image search feature is currently not supported
@@ -169,6 +173,7 @@ class MainWindow(QMainWindow):
 
 
     # This just stops the camera by deleting it, and reinserting it.
+    # If there is a better way someone let me know...
     @Slot()
     def stop(self):
         if self.camera.th.isRunning:
